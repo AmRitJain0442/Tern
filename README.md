@@ -1,11 +1,14 @@
 <p align="center">
-  <img src="docs/assets/hero.png" alt="Model Router — Choose the right model. MLX GPU routing with economy and strong paths." width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/wordmark-dark.png">
+    <img src="docs/assets/wordmark-light.png" alt="Tern — an angular bird in flight beside the tern wordmark" width="560">
+  </picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/AmRitJain0442/model-router/actions/workflows/check.yml"><img src="https://img.shields.io/badge/CI-GitHub_Actions-9dd6ae?style=flat&labelColor=303840" alt="View GitHub Actions checks"></a>
-  <img src="https://img.shields.io/badge/python-3.11%2B-171b20?style=flat&labelColor=303840&color=f5b544" alt="Python 3.11 or later">
-  <img src="https://img.shields.io/badge/status-experimental-f5b544?style=flat&labelColor=303840" alt="Experimental">
+  <a href="https://github.com/AmRitJain0442/tern/actions/workflows/check.yml"><img src="https://img.shields.io/badge/CI-GitHub_Actions-9dd6ae?style=flat&labelColor=303840" alt="View GitHub Actions checks"></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-171b20?style=flat&labelColor=303840&color=d97732" alt="Python 3.11 or later">
+  <img src="https://img.shields.io/badge/status-experimental-d97732?style=flat&labelColor=303840" alt="Experimental">
 </p>
 
 <p align="center">
@@ -16,11 +19,11 @@
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
-# Model Router
+# Tern
 
-**A small GPU classifier. A deliberate choice of LLM.**
+**Small router. Clear decisions.**
 
-Model Router uses [Laya-MLX](https://huggingface.co/aac6fef/laya-mlx) to help choose between economy and strong models, then sends your request through OpenRouter. It combines capability checks, conservative fallback, and an async Python adapter that preserves messages, tool calls, streaming chunks, and usage.
+Tern uses [Laya-MLX](https://huggingface.co/aac6fef/laya-mlx) to help choose between economy and strong models, then sends your request through OpenRouter. It combines capability checks, conservative fallback, and an async Python adapter that preserves messages, tool calls, streaming chunks, and usage.
 
 Start with the free offline demo. Connect your private GPU endpoint when you're ready.
 
@@ -29,10 +32,10 @@ Start with the free offline demo. Connect your private GPU endpoint when you're 
 Requires [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git. The repository currently requires collaborator access.
 
 ```sh
-git clone https://github.com/AmRitJain0442/model-router.git
-cd model-router
+git clone https://github.com/AmRitJain0442/tern.git
+cd tern
 uv sync --extra cli --python 3.12
-uv run model-router demo
+uv run tern demo
 ```
 
 **No API key. No GPU. No network calls in the demo.** Installation downloads Python packages; the demo itself runs locally through the real adapter with synthetic model responses.
@@ -44,11 +47,11 @@ uv run model-router demo
 ## Connect your models
 
 ```sh
-uv run model-router init
+uv run tern init
 # Add your OpenRouter key to .env. Existing values are never overwritten.
 gcloud auth login
-uv run model-router doctor --live
-uv run model-router chat "Explain idempotency in two sentences." --stream
+uv run tern doctor --live
+uv run tern chat "Explain idempotency in two sentences." --stream
 ```
 
 The CLI reads `.env` automatically. Live use needs an OpenRouter key and Cloud Run invoker access to the configured Laya service. The default endpoint is private; use your own `LAYA_ENDPOINT` if you are deploying separately. `doctor --live` checks access and wakes the GPU without buying an LLM completion. Live GPU use and `chat` can incur charges.
@@ -60,7 +63,7 @@ The CLI reads `.env` automatically. Live use needs an OpenRouter key and Cloud R
 The GPU service runs in **shadow mode**, so live requests default to the strong model. To explicitly try economy routing:
 
 ```sh
-uv run model-router chat "Rewrite politely: send the report." --experimental-threshold 0.7
+uv run tern chat "Rewrite politely: send the report." --experimental-threshold 0.7
 ```
 
 That threshold is an experiment, not a quality guarantee. [Full setup and troubleshooting →](docs/quickstart.md)
@@ -125,11 +128,11 @@ uv run pytest -q
 uv run ruff check src tests scripts examples
 ```
 
-Tests run without cloud credentials or inference hardware. CI checks every push and pull request. Live tests are explicit and separate. Project code is under [`src/model_router`](src/model_router); [issues](https://github.com/AmRitJain0442/model-router/issues) and focused pull requests are welcome from collaborators.
+Tests run without cloud credentials or inference hardware. CI checks every push and pull request. Live tests are explicit and separate. Project code is under [`src/model_router`](src/model_router); [issues](https://github.com/AmRitJain0442/tern/issues) and focused pull requests are welcome from collaborators.
 
 ---
 
 <p align="center">
-  <img src="docs/assets/logo.png" alt="Model Router branching route mark" width="56"><br>
+  <img src="docs/assets/logo.png" alt="Tern flight mark" width="56"><br>
   <sub>Built with <a href="https://github.com/mizorewww/laya-mlx">Laya-MLX</a>, <a href="https://github.com/ml-explore/mlx">MLX</a> and <a href="https://openrouter.ai">OpenRouter</a>.</sub>
 </p>

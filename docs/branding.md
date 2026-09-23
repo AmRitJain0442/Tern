@@ -1,26 +1,32 @@
-# Model Router identity
+# Tern identity
 
-The branching route mark represents one request and a deliberate choice between two model tiers. The visual language uses graphite, warm ivory and amber, with monospace terminal typography. Assets work on GitHub's light and dark README surfaces.
+**Tern — small router, clear decisions.**
+
+A tern's flight gives the project its name and mark. Two angular wings meet at a junction, suggesting a choice of routes. The identity uses burnt orange with charcoal or ivory lettering. The logo and wordmarks have real alpha transparency: no rectangular banner, grid, or painted backdrop.
 
 | Asset | File | Purpose |
 |---|---|---|
-| Transparent route mark | [logo.png](assets/logo.png) | Small project identity and README footer |
-| Editorial hero | [hero.png](assets/hero.png) | README cover; includes the wordmark and route symbol |
-| Offline terminal | [terminal-demo.png](assets/terminal-demo.png) | Real CLI output using synthetic model responses |
-| Setup terminal | [terminal-doctor.png](assets/terminal-doctor.png) | Real local setup checks; credential values hidden |
+| Standalone flight mark | [logo.png](assets/logo.png) | Transparent icon |
+| Light-theme wordmark | [wordmark-light.png](assets/wordmark-light.png) | Orange mark and charcoal lettering |
+| Dark-theme wordmark | [wordmark-dark.png](assets/wordmark-dark.png) | Orange mark and ivory lettering |
+| Offline terminal | [terminal-demo.png](assets/terminal-demo.png) | Actual Tern CLI output with a transparent outer canvas |
+| Setup terminal | [terminal-doctor.png](assets/terminal-doctor.png) | Actual local checks with credential values hidden |
 
-Keep generous space around the mark. Do not attach unverified performance numbers, certification badges or quality claims to the identity.
+The README selects the correct wordmark through a `picture` element and `prefers-color-scheme`. The terminal interiors stay opaque for text contrast; their surrounding canvas is transparent.
 
 ## Palette
 
 | Color | Hex | Use |
 |---|---|---|
-| Graphite | `#171B20` | Main background |
-| Ink | `#101418` | Terminal surround |
-| Ivory | `#E8E8DD` | Main text |
-| Amber | `#F5B544` | Brand and economy route |
-| Sage | `#9DD6AE` | Successful checks and strong route |
-| Slate | `#94A3AB` | Secondary labels |
+| Burnt orange | `#D97732` | Flight mark |
+| Charcoal | `#20252B` | Lettering on light pages |
+| Ivory | `#F0EEE8` | Lettering on dark pages |
+| Warm orange | `#E9985F` | Terminal accents |
+| Graphite | `#171B20` | Terminal interior |
+| Sage | `#9DD6AE` | Successful checks |
+| Slate | `#94A3AB` | Secondary terminal labels |
+
+Keep clear space around the identity. Use the supplied theme variants rather than placing a background rectangle behind the logo. Do not attach unsupported performance or quality claims to the mark.
 
 ## Reproduce terminal screenshots
 
@@ -28,18 +34,30 @@ Keep generous space around the mark. Do not attach unverified performance number
 uv run --extra cli --with playwright python scripts/render_assets.py
 ```
 
-Install Chrome, or specify `--browser /path/to/chromium`. The script starts CLI subprocesses with a 108-column, true-color console, captures their actual output and renders it in a terminal frame through headless Chromium. The frame is presentation; command output is not handwritten. Plain text transcripts are saved beside the PNGs for accessibility. It never calls inference endpoints.
+Install Chrome, or specify `--browser /path/to/chromium`. The script starts real CLI subprocesses, captures their output, and renders a terminal frame in Chromium with the page background omitted. Text transcripts are saved beside the PNGs. It does not call inference endpoints.
 
-The `doctor` capture reflects the machine's real configuration. Reproducing the successful screenshot requires a configured `.env` and a local gcloud installation; it fails instead of fabricating successful checks. The screenshots do not imply that local checks authenticate to a remote service.
+The doctor screenshot reflects actual local configuration. Reproducing its successful checks needs a configured `.env` and gcloud installation. The capture fails rather than fabricating success. Local checks do not authenticate to remote services.
 
-## Generated asset provenance
+## Names in code
 
-The logo and hero were generated with the **built-in imagegen tool**, then copied into `docs/assets/`. The hero uses the logo as its identity reference. No CLI image-generation fallback was used. Terminal screenshots are programmatic captures, not image-generated terminal text.
+The project and GitHub repository are **Tern**. The Python distribution is `tern-router`, and the primary command is `tern`. The `model-router` command remains a compatibility alias, and the Python import namespace remains `model_router`. Cloud service names and historical benchmark artifacts retain their original identifiers so recorded results remain reproducible.
 
-### Logo prompt
+## Asset provenance and prompts
 
-> Use case: logo-brand. Create a finished, premium developer-tool logo for an open-source-style Python project called Model Router. Asset: standalone icon, 1024 square, genuinely transparent background. The symbol should communicate a single input splitting into two carefully chosen routes. Draw a bold geometric three-way switch / branching circuit monogram using warm amber (#F5B544) thick continuous paths and three small rounded-square endpoints; dark graphite (#171B20) accents only if needed. Strong simple silhouette, precise 45-degree geometry, restrained industrial wayfinding aesthetic, flat vector-like rendering, crisp edges, centered with generous transparent margin. No lettering, no gradients, no glow, no shadows, no 3D, no mockup, no surrounding frame, no watermark. It must read clearly at favicon scale and on dark or light backgrounds. Save the result as a project-ready PNG.
+The wordmarks and standalone mark were generated/edited with the **built-in imagegen tool**. Each PNG was copied into this repository and checked for transparent pixels. No CLI image-generation fallback or programmatic background removal was used. Terminal images come from actual CLI output.
 
-### Hero prompt
+### Light-theme wordmark
 
-> Use case: logo-brand. Create a premium GitHub README hero banner for Model Router, very wide 3:1 aspect ratio. Use the attached logo as the brand identity reference: amber one-to-two branching route symbol with rounded square endpoints. Make a finished editorial technology brand composition on a solid very dark graphite #171B20 canvas with a fine subtle technical grid. Left two-thirds: small amber eyebrow 'MLX / GPU / OPENROUTER', huge immaculate warm ivory modern geometric sans-serif lettering on two lines 'MODEL' then 'ROUTER', with the small subtitle 'Choose the right model.' underneath. Right third: an elegant large amber branching route symbol matching the attached logo, integrated into thin route lines with tiny ivory labels 'ECONOMY' above and 'STRONG' below. Bottom a very fine divider and small understated text 'SMALL CLASSIFIER. DELIBERATE DECISIONS.' Wide generous safe margins so nothing is cropped. Restrained industrial wayfinding meets Swiss editorial design, beautifully kerned typography, crisp precise shapes, high contrast. Flat graphic layout. No gradients, no glow, no 3D objects, no fake statistics, no stars, no badges, no photos, no decorative nonsense. This is the final project banner, not a website screenshot or device mockup.
+> Use case: logo-brand. Design a finished premium logo lockup for TERN, a developer tool that routes requests between AI models. Genuinely transparent RGBA background, no backdrop of any kind. Wide horizontal composition about 3:1. On the left a beautifully simple geometric tern bird in flight, constructed from two angular ribbon-like wings that also suggest a branching route. Confident distinctive silhouette, subtle negative-space junction, no eyes or illustration detail. Mark in a single flat burnt orange #D97732 that remains visible on white and dark charcoal. To its right the exact word 'tern' in lowercase, generously kerned custom geometric sans-serif, substantial medium-bold weight, precise beautifully drawn letterforms. Wordmark in solid dark charcoal #20252B, intended for a light page. Both mark and lettering vertically centered, balanced optical sizing, comfortable but not excessive transparent margins. Refined contemporary open-source tooling identity. Only the mark and the four letters t e r n. Absolutely no tagline, no rectangular panel, no grid, no texture, no gradient, no white background, no black background, no shadows, no glow, no 3D, no checkerboard baked into the image, no watermark. The empty areas must be actual alpha transparency.
+
+### Dark-theme wordmark edit
+
+Reference: `wordmark-light.png`.
+
+> Edit this Tern logo lockup. Change ONLY the dark charcoal lettering of the exact word 'tern' to solid warm ivory #F0EEE8, so it works on a dark webpage. Preserve the burnt-orange bird mark exactly: same shape, color, position and size. Preserve the lettering shapes, spacing, alignment, composition and image dimensions exactly. Keep a genuinely transparent RGBA background, all negative space fully transparent, no backdrop, no rectangle, no texture, no checkerboard, no shadow or glow. The result is the dark-theme transparent wordmark.
+
+### Standalone mark edit
+
+Reference: `wordmark-light.png`.
+
+> Extract the burnt-orange geometric tern bird mark from the attached Tern logo into a standalone square transparent icon. Remove all four letters completely. Preserve the bird's exact silhouette, wing shapes, negative space and color. Center the bird on a square canvas with comfortable transparent margins on every side, sized large enough to read at 32px. Genuinely transparent RGBA background, not white or black or a checkerboard pattern. Only the single burnt-orange bird mark; no type, no extra paths, no shadow, no glow, no panel.

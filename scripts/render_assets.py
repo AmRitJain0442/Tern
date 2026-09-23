@@ -42,7 +42,7 @@ def capture(command, stem, caption, browser):
         file=output, record=True, width=108, force_terminal=True, color_system="truecolor",
         legacy_windows=False,
     )
-    console.print("$ uv run model-router " + " ".join(command), style="accent")
+    console.print("$ uv run tern " + " ".join(command), style="accent")
     result = subprocess.run(
         [
             sys.executable,
@@ -70,13 +70,13 @@ def capture(command, stem, caption, browser):
     (ASSETS / f"{stem}.txt").write_text(transcript, encoding="utf-8")
     html = """<!doctype html><html><head><meta charset="utf-8"><style>
       * { box-sizing: border-box; }
-      body { margin: 0; background: #101418; padding: 30px; color: #e8e8dd; }
+      body { margin: 0; background: transparent; padding: 30px; color: #e8e8dd; }
       .frame { border: 1px solid #3a4248; border-radius: 13px; overflow: hidden;
-        background: #171b20; box-shadow: 0 18px 50px #0003; }
+        background: #171b20; }
       .bar { height: 50px; border-bottom: 1px solid #323a41; display: flex;
         align-items: center; padding: 0 24px; gap: 9px; font: 13px 'Consolas', monospace; }
       .dot { width: 9px; height: 9px; border-radius: 50%; background: #657078; }
-      .dot:first-child { background: #f5b544; }
+      .dot:first-child { background: #e9985f; }
       .title { margin-left: 18px; color: #a6b3bb; }
       .tag { margin-left: auto; color: #a6b3bb; letter-spacing: 1px; }
       pre { margin: 0; padding: 24px 24px 18px; font: 16px/1.85 'Consolas', 'Liberation Mono', monospace;
@@ -85,15 +85,15 @@ def capture(command, stem, caption, browser):
         letter-spacing: 1px; }
     </style></head><body><main><div class="frame"><div class="bar">
       <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-      <span class="title">model-router / terminal</span><span class="tag">PYTHON CLI</span>
+      <span class="title">tern / terminal</span><span class="tag">PYTHON CLI</span>
       </div><pre>TERMINAL</pre></div><div class="caption">CAPTION</div></main></body></html>"""
     page = browser.new_page(viewport={"width": 1170, "height": 750}, device_scale_factor=2)
     page.set_content(html.replace("TERMINAL", terminal).replace("CAPTION", caption))
-    page.screenshot(path=str(ASSETS / f"{stem}.png"), full_page=True)
+    page.screenshot(path=str(ASSETS / f"{stem}.png"), full_page=True, omit_background=True)
     # Crop by choosing a viewport matching layout, not by editing the resulting image.
     height = page.locator("body").evaluate("el => el.getBoundingClientRect().height")
     page.set_viewport_size({"width": 1170, "height": round(height)})
-    page.screenshot(path=str(ASSETS / f"{stem}.png"), full_page=True)
+    page.screenshot(path=str(ASSETS / f"{stem}.png"), full_page=True, omit_background=True)
     page.close()
     print(f"Saved {stem}.png and text transcript")
 

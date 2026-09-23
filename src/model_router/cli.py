@@ -39,7 +39,7 @@ def make_console(**kwargs):
 
 def heading(console, subtitle):
     console.print()
-    console.print("[accent bold]  TERN[/]  [muted]/  choose the right model[/]")
+    console.print("[accent bold]  TERN[/]  [muted]/  small router. clear decisions.[/]")
     console.print(f"  [muted]{subtitle}[/]")
     console.print()
 
@@ -224,7 +224,7 @@ async def chat(args, console):
 
 def parser():
     result = argparse.ArgumentParser(
-        prog="tern", description="Choose the right model. Start with a free offline demo."
+        prog="tern", description="Small router. Clear decisions. Start with a free offline demo."
     )
     result.add_argument(
         "--env-file", type=Path, default=Path(".env"), help="local configuration (default: .env)"

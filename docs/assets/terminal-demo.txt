@@ -1,6 +1,6 @@
-$ uv run model-router demo
+$ uv run tern demo
 
-  MODEL ROUTER  /  choose the right model
+  TERN  /  small router. clear decisions.
   OFFLINE DEMO  ·  real adapter, synthetic responses
 
   REQUEST                                  ROUTE      WHY
@@ -13,4 +13,4 @@ $ uv run model-router demo
   4 routes completed  ·  no API key  ·  no GPU  ·  no network
   Illustrative scores. Live routing defaults to the strong model.
 
-  Next  model-router init  then  model-router doctor
+  Next  tern init  then  tern doctor
