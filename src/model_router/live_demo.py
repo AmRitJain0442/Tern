@@ -20,7 +20,7 @@ from model_router.adapters import (
     RoutingContext,
 )
 from model_router.adapters.laya import DEFAULT_ENDPOINT
-from model_router.demo import demo_cases
+from model_router.demo import EXPECTED_TAGS, demo_cases
 
 CURRENT_ROW = ContextVar("live_demo_row", default=None)
 
@@ -65,6 +65,8 @@ def live_cases(max_tokens=2048):
             {
                 "id": index,
                 "category": category,
+                "true_tag": EXPECTED_TAGS[category],
+                "true_tag_source": "fixture_expectation",
                 "workload": fixture["workload"],
                 "request": ChatRequest(
                     messages=[{"role": "user", "content": prompt}], max_tokens=max_tokens, **extra
@@ -112,6 +114,17 @@ class RecordedAdapter(OpenRouterAdapter):
         if row is not None:
             row["initial_routing"] = result.model_dump()
         return result
+
+
+def output_tag(row, models=()):
+    """Final selected tier, including provider fallback; never infer a reference label."""
+    if row.get("routing"):
+        return row["routing"]["tier"]
+    attempts = row.get("provider_attempts", [])
+    if attempts:
+        tiers = {model["id"]: model["tier"] for model in models}
+        return tiers.get(attempts[-1]["model"])
+    return row.get("initial_routing", {}).get("tier")
 
 
 def summarize(rows):
@@ -219,6 +232,9 @@ async def run_live_demo(
             {
                 "id": c["id"],
                 "category": c["category"],
+                "true_tag": c.get("true_tag"),
+                "true_tag_source": c.get("true_tag_source", "unlabeled"),
+                "output_tag": None,
                 "workload": c["workload"],
                 "request": c["request"].model_dump(exclude_none=True),
                 "status": "pending",
@@ -239,6 +255,9 @@ async def run_live_demo(
 
     progress(f"LIVE: 100 requests; output cap {max_tokens}/attempt; concurrency {concurrency}")
     progress(f"Saving progress to {path}")
+    progress(
+        "TRUE_TAG = fixture expectation, not measured ground truth; OUTPUT_TAG = selected tier."
+    )
     try:
         async with (
             RecordedLaya(
@@ -264,6 +283,10 @@ async def run_live_demo(
             report["status"] = "running"
             checkpoint()
             started = perf_counter()
+            progress(
+                f"{'DONE':7} {'ID':>3}  {'CATEGORY':9}  {'TRUE_TAG':10} {'OUTPUT_TAG':10} "
+                f"{'STATUS':9}  {'TIME':>6}  REPORTED COST"
+            )
 
             async def execute(case, row):
                 async with gate:
@@ -288,14 +311,13 @@ async def run_live_demo(
                         row.update(status="failed", error_kind=type(exc).__name__)
                     finally:
                         row["elapsed_ms"] = (perf_counter() - began) * 1000
+                        row["output_tag"] = output_tag(row, report["models"])
                         CURRENT_ROW.reset(token)
                         checkpoint()
                     summary = report["summary"]
-                    route = row.get("routing", row.get("initial_routing", {})).get(
-                        "tier", "unknown"
-                    )
                     progress(
-                        f"{summary['requests_finished']:3}/100  {row['category']:9}  {route:7}  "
+                        f"{summary['requests_finished']:3}/100 {row['id']:3}  {row['category']:9}  "
+                        f"{row['true_tag'] or 'unknown':10} {row['output_tag'] or 'unknown':10} "
                         f"{row['status']:9}  {row['elapsed_ms'] / 1000:5.1f}s  "
                         f"reported cost ${summary['reported_openrouter_cost_usd']:.4f}"
                     )

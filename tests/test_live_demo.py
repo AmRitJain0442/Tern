@@ -128,6 +128,14 @@ def test_live_runner_checkpoints_real_adapter_outcomes_with_mock_transports(tmp_
     assert report["summary"]["attempts_without_cost"] == 1
     assert report["summary"]["tool_calls_valid"] == 1
     assert report["summary"]["successful_classifier_calls"] == 3
+    assert [row["true_tag"] for row in report["rows"]] == ["economy", "strong", "strong", "economy"]
+    assert [row["output_tag"] for row in report["rows"]] == [
+        "economy",
+        "economy",
+        "strong",
+        "economy",
+    ]
+    assert all(row["true_tag_source"] == "fixture_expectation" for row in report["rows"])
     assert sorted(updates) == [1, 2, 3, 4]
     assert "test-only-secret" not in path.read_text()
     assert "must-not-escape" not in path.read_text()
@@ -140,3 +148,14 @@ def test_existing_paid_evidence_is_not_overwritten(tmp_path, monkeypatch):
     with pytest.raises(FileExistsError):
         asyncio.run(live_demo.run_live_demo(output=path))
     assert path.read_text() == "previous evidence"
+
+
+def test_output_tag_uses_final_attempt_even_if_provider_fallback_fails():
+    row = {
+        "initial_routing": {"tier": "economy"},
+        "provider_attempts": [{"model": "cheap"}, {"model": "expensive"}],
+    }
+    models = [{"id": "cheap", "tier": "economy"}, {"id": "expensive", "tier": "strong"}]
+    assert live_demo.output_tag(row, models) == "strong"
+    assert live_demo.output_tag(row) is None
+    assert live_demo.output_tag({}) is None

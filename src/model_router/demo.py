@@ -15,6 +15,15 @@ from model_router.adapters import (
 )
 from model_router.backend import MODEL_REVISION
 
+# Declared demo expectations, independent of classifier predictions. Not quality labels.
+EXPECTED_TAGS = {
+    "rewrites": "economy",
+    "coding": "strong",
+    "tools": "strong",
+    "outages": "strong",
+    "summaries": "economy",
+}
+
 
 def demo_cases():
     """100 distinct synthetic prompts, interleaved to demonstrate isolated outages."""
@@ -221,6 +230,9 @@ async def run_demo():
                         "workload": case["workload"],
                         "prompt": prompt,
                         "tier": result.routing.tier,
+                        "true_tag": EXPECTED_TAGS[case["category"]],
+                        "true_tag_source": "fixture_expectation",
+                        "output_tag": result.routing.tier,
                         "reason": result.routing.reason,
                         "probability": result.routing.probability_economy,
                         "answer": result.response["choices"][0]["message"]["content"],

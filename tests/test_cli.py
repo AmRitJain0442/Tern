@@ -55,6 +55,7 @@ def test_demo_summary_and_full_output():
     assert "100 requests completed" in summary
     assert "25 economy" in summary and "75 strong" in summary
     assert "tern demo --all" in summary
+    assert "TRUE_TAG" in summary and "OUTPUT_TAG" in summary
     code, full = invoke(["demo", "--all"])
     assert code == 0
     assert "Rewrite this politely: send the report." in full
@@ -140,3 +141,32 @@ def test_json_is_machine_readable_even_in_narrow_terminal():
     payload = {"content": "a long answer " * 100, "markup": "[red]literal[/]"}
     emit_json(console, payload)
     assert json.loads(output.getvalue()) == payload
+
+
+def test_saved_results_preserve_missing_labels_and_show_mismatches(tmp_path, monkeypatch):
+    def prohibit_network(*args, **kwargs):
+        raise AssertionError("Saved results attempted a network connection")
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request", prohibit_network)
+    path = tmp_path / "results.json"
+    payload = {
+        "rows": [
+            {
+                "id": 1,
+                "category": "coding",
+                "true_tag": "strong",
+                "routing": {"tier": "economy"},
+                "status": "completed",
+            },
+            {"id": 2, "category": "rewrites", "routing": {"tier": "strong"}, "status": "completed"},
+        ]
+    }
+    original = json.dumps(payload)
+    path.write_text(original)
+    code, output = invoke(["results", str(path)])
+    assert code == 0
+    assert "TRUE_TAG" in output and "OUTPUT_TAG" in output
+    lines = output.splitlines()
+    assert any("coding" in line and "strong" in line and "economy" in line for line in lines)
+    assert any("rewrites" in line and "unknown" in line and "strong" in line for line in lines)
+    assert path.read_text() == original

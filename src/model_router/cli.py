@@ -56,7 +56,8 @@ def show_demo(console, data, *, show_all=False):
     table = Table(box=None, padding=(0, 2), show_edge=False)
     table.add_column("REQUEST" if show_all else "SCENARIO", style="white")
     table.add_column("#" if show_all else "COUNT", justify="right")
-    table.add_column("ROUTE")
+    table.add_column("TRUE_TAG", no_wrap=True)
+    table.add_column("OUTPUT_TAG", no_wrap=True)
     table.add_column("WHY", style="muted")
     reasons = {
         "capability_or_risk_constraint": "tool capability required",
@@ -85,6 +86,7 @@ def show_demo(console, data, *, show_all=False):
         table.add_row(
             row["prompt"] if show_all else labels[row["category"]],
             str(row["id"] if show_all else data["summary"]["categories"][row["category"]]),
+            row["true_tag"].upper(),
             f"[{style}]{row['tier'].upper()}[/]",
             reason,
         )
@@ -97,6 +99,7 @@ def show_demo(console, data, *, show_all=False):
     )
     console.print("  [muted]No API key  ·  no GPU  ·  no network[/]")
     console.print("  [muted]Illustrative scores. Live routing defaults to the strong model.[/]")
+    console.print("  [muted]TRUE_TAG: fixture expectation, not measured ground truth.[/]")
     if not show_all:
         console.print(
             "  [muted]Every request:[/] [accent]tern demo --all[/]  [muted]JSON:[/] [accent]tern demo --json[/]"
@@ -104,6 +107,29 @@ def show_demo(console, data, *, show_all=False):
     console.print()
     console.print("  Next  [accent]tern init[/]  [muted]then[/]  [accent]tern doctor[/]")
     console.print()
+
+
+def show_results(console, report):
+    from rich.table import Table
+
+    from model_router.live_demo import output_tag
+
+    heading(console, "SAVED RUN / no API requests")
+    table = Table(box=None, padding=(0, 1))
+    for name in ("ID", "CATEGORY", "TRUE_TAG", "OUTPUT_TAG", "STATUS"):
+        table.add_column(name, no_wrap=True)
+    for row in report["rows"]:
+        table.add_row(
+            str(row["id"]),
+            row["category"],
+            row.get("true_tag") or "unknown",
+            row.get("output_tag") or output_tag(row, report.get("models", [])) or "unknown",
+            row["status"],
+        )
+    console.print(table)
+    console.print(
+        "TRUE_TAG: fixture expectation, not measured ground truth. Older unlabeled runs: unknown."
+    )
 
 
 def init_config(path, console):
@@ -257,6 +283,8 @@ def parser():
         "--env-file", type=Path, default=Path(".env"), help="local configuration (default: .env)"
     )
     commands = result.add_subparsers(dest="command", required=True)
+    results = commands.add_parser("results", help="view saved live-run tags without API calls")
+    results.add_argument("path", type=Path, help="saved live-run JSON file")
     demo = commands.add_parser(
         "demo", help="route 100 requests offline, or use --live for real GPU/OpenRouter calls"
     )
@@ -350,6 +378,17 @@ def main(argv=None, *, console=None):
     args = parser().parse_args(argv)
     console = console or make_console()
     try:
+        if args.command == "results":
+            try:
+                report = json.loads(args.path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                raise ValueError(
+                    "Cannot read results; supply an existing live-run JSON file"
+                ) from None
+            if not isinstance(report, dict) or not isinstance(report.get("rows"), list):
+                raise ValueError("Results must contain a rows list")
+            show_results(console, report)
+            return 0
         if args.command == "demo":
             if args.live:
                 from dotenv import load_dotenv
