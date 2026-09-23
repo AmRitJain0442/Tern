@@ -33,13 +33,13 @@ def make_console(**kwargs):
     except ImportError:
         raise SystemExit("Install the CLI first: uv sync --extra cli") from None
     return Console(
-        theme=Theme({"accent": "#f5b544", "muted": "#94a3ab", "good": "#9dd6ae"}), **kwargs
+        theme=Theme({"accent": "#e9985f", "muted": "#94a3ab", "good": "#9dd6ae"}), **kwargs
     )
 
 
 def heading(console, subtitle):
     console.print()
-    console.print("[accent bold]  MODEL ROUTER[/]  [muted]/  choose the right model[/]")
+    console.print("[accent bold]  TERN[/]  [muted]/  choose the right model[/]")
     console.print(f"  [muted]{subtitle}[/]")
     console.print()
 
@@ -74,7 +74,7 @@ def show_demo(console, data):
     console.print("  [muted]Illustrative scores. Live routing defaults to the strong model.[/]")
     console.print()
     console.print(
-        "  Next  [accent]model-router init[/]  [muted]then[/]  [accent]model-router doctor[/]"
+        "  Next  [accent]tern init[/]  [muted]then[/]  [accent]tern doctor[/]"
     )
     console.print()
 
@@ -95,7 +95,7 @@ def init_config(path, console):
     else:
         console.print("[good]Created configuration.[/] Add your OpenRouter key to it.")
     console.print(
-        "Next: [accent]model-router doctor[/]. The default GPU endpoint requires Cloud Run invoker access."
+        "Next: [accent]tern doctor[/]. The default GPU endpoint requires Cloud Run invoker access."
     )
 
 
@@ -162,7 +162,7 @@ def assignments():
 async def chat(args, console):
     key = os.environ.get("OPENROUTER_API_KEY", "").strip()
     if not key:
-        raise ValueError("Set OPENROUTER_API_KEY in .env, then run model-router doctor")
+        raise ValueError("Set OPENROUTER_API_KEY in .env, then run tern doctor")
     if args.input_tokens is None and len(args.prompt.encode("utf-8")) > 4096:
         raise ValueError("For long prompts supply --input-tokens with a conservative token bound")
     thresholds = (
@@ -224,7 +224,7 @@ async def chat(args, console):
 
 def parser():
     result = argparse.ArgumentParser(
-        prog="model-router", description="Choose the right model. Start with a free offline demo."
+        prog="tern", description="Choose the right model. Start with a free offline demo."
     )
     result.add_argument(
         "--env-file", type=Path, default=Path(".env"), help="local configuration (default: .env)"
@@ -321,7 +321,7 @@ def main(argv=None, *, console=None):
                 console.print("  [good]Live connectivity checks passed.[/]")
             else:
                 console.print(
-                    "\n  [muted]Local checks only. Run model-router doctor --live to verify access.[/]"
+                    "\n  [muted]Local checks only. Run tern doctor --live to verify access.[/]"
                 )
             return 0
         asyncio.run(chat(args, console))
@@ -334,7 +334,7 @@ def main(argv=None, *, console=None):
         ):
             message = str(exc)
         else:
-            message = "Invalid configuration. Run model-router doctor and check your inputs."
+            message = "Invalid configuration. Run tern doctor and check your inputs."
         console.print(f"Error: {message}", style="red", markup=False)
         return 1
     except KeyboardInterrupt:

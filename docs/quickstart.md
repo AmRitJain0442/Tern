@@ -7,20 +7,22 @@ The fastest first run is local and free. Cloud access is only needed for live ro
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git, then:
 
 ```sh
-git clone https://github.com/AmRitJain0442/model-router.git
-cd model-router
+git clone https://github.com/AmRitJain0442/tern.git
+cd tern
 uv sync --extra cli --python 3.12
-uv run model-router demo
+uv run tern demo
 ```
 
 These commands work in PowerShell, bash and zsh. The repository is private, so your GitHub account needs collaborator access. `uv` can install Python 3.12 if it is missing. You do not need CUDA, MLX, Docker, Google Cloud or an API key on your laptop for this demo.
+
+Upgrading from Model Router? Run `uv sync --extra cli` to install the new `tern` command. The `model-router` command remains an alias, and existing `model_router` Python imports continue to work.
 
 The demo exercises the actual adapter using in-process HTTP transports. Its four synthetic cases demonstrate economy selection, strong selection, tool bypass and classifier failure fallback. They are not live inferences or quality benchmarks.
 
 ## 2. Add local configuration
 
 ```sh
-uv run model-router init
+uv run tern init
 ```
 
 Open `.env` in your editor and fill in:
@@ -37,7 +39,7 @@ LAYA_ENDPOINT=https://your-private-service.run.app
 For another file, put the global flag before the command:
 
 ```sh
-uv run model-router --env-file .env.staging doctor
+uv run tern --env-file .env.staging doctor
 ```
 
 ## 3. Check access
@@ -46,8 +48,8 @@ Install the [Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install) a
 
 ```sh
 gcloud auth login
-uv run model-router doctor
-uv run model-router doctor --live
+uv run tern doctor
+uv run tern doctor --live
 ```
 
 The local doctor checks configuration without displaying credential values. `--live` validates the key using OpenRouter's [current-key endpoint](https://openrouter.ai/docs/api/api-reference/api-keys/get-current-key), resolves your selected models in the catalog, and checks private GPU readiness. It does not purchase an LLM completion, but waking the Cloud Run GPU can incur charges. A first startup may take about a minute.
@@ -57,9 +59,9 @@ On a GCP workload with a service account, use `--auth google` instead of local `
 ## 4. Send a live prompt
 
 ```sh
-uv run model-router chat "Explain idempotency in two sentences."
-uv run model-router chat "What is a cache?" --stream
-uv run model-router chat "What is 17 times 23?" --json
+uv run tern chat "Explain idempotency in two sentences."
+uv run tern chat "What is a cache?" --stream
+uv run tern chat "What is 17 times 23?" --json
 ```
 
 This uses paid OpenRouter generation and the private GPU service. The CLI warms the GPU at startup; it is meant for interactive use, not a replacement for a long-lived application client. Production applications should reuse the Python adapter's clients.
@@ -67,8 +69,8 @@ This uses paid OpenRouter generation and the private GPU service. The CLI warms 
 Shadow mode selects the strong model by default. An explicit experimental threshold enables economy selection for that request's workload:
 
 ```sh
-uv run model-router chat "Rewrite politely: send the report." --experimental-threshold 0.7
-uv run model-router chat "Explain lock contention." --workload coding --experimental-threshold 0.7
+uv run tern chat "Rewrite politely: send the report." --experimental-threshold 0.7
+uv run tern chat "Explain lock contention." --workload coding --experimental-threshold 0.7
 ```
 
 The threshold is not calibrated. Capability checks and failure fallback still apply.
@@ -93,7 +95,7 @@ The convenience input budget only applies to a single text prompt of at most 4,0
 | Symptom | What to do |
 |---|---|
 | Repository not found | Sign in to GitHub with an account granted access to this private repo |
-| `model-router` not found | Run it as `uv run model-router …` after `uv sync --extra cli` |
+| `tern` not found | Run it as `uv run tern …` after `uv sync --extra cli` |
 | Missing OpenRouter key | Add it to `.env` in the directory where you run the command |
 | Local doctor passes, live doctor fails | Verify the key, Google login and invoker permission; local checks do not authenticate |
 | Cold startup is slow | Allow startup to finish; the service scales to zero when idle |

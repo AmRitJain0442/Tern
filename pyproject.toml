@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "model-router-lab"
+name = "tern-router"
 version = "0.1.0"
 description = "GPU-assisted LLM routing with conservative policies and OpenRouter dispatch"
 readme = "README.md"
@@ -11,12 +11,13 @@ requires-python = ">=3.11"
 dependencies = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "httpx>=0.28,<1"]
 
 [project.scripts]
+tern = "model_router.cli:main"
 model-router = "model_router.cli:main"
 
 [project.urls]
-Repository = "https://github.com/AmRitJain0442/model-router"
-Documentation = "https://github.com/AmRitJain0442/model-router/blob/main/docs/quickstart.md"
-Issues = "https://github.com/AmRitJain0442/model-router/issues"
+Repository = "https://github.com/AmRitJain0442/tern"
+Documentation = "https://github.com/AmRitJain0442/tern/blob/main/docs/quickstart.md"
+Issues = "https://github.com/AmRitJain0442/tern/issues"
 
 [project.optional-dependencies]
 adapter = ["google-auth[requests]>=2.38,<3"]

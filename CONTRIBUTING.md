@@ -1,14 +1,14 @@
-# Contributing to Model Router
+# Contributing to Tern
 
 Thanks for helping make routing easier to use and easier to evaluate. Small, focused changes are the easiest to review. This repository currently requires collaborator access; contributions do not require cloud credentials.
 
 ## Local setup
 
 ```sh
-git clone https://github.com/AmRitJain0442/model-router.git
-cd model-router
+git clone https://github.com/AmRitJain0442/tern.git
+cd tern
 uv sync --extra dev --extra cli --python 3.12
-uv run model-router demo
+uv run tern demo
 uv run pytest -q
 uv run ruff check src tests scripts examples
 ```

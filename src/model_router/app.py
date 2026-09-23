@@ -34,7 +34,7 @@ def create_app(backend_factory=MLXBackend, settings=None):
         app.state.backend.predict("Rewrite: Hello, how are you?")
         yield
 
-    app = FastAPI(title="Model Router Lab", lifespan=lifespan)
+    app = FastAPI(title="Tern", lifespan=lifespan)
 
     @app.get("/health")
     def health():

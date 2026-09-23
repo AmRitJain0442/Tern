@@ -48,7 +48,7 @@ class OpenRouterClient:
             follow_redirects=False,
             headers={
                 "Authorization": "Bearer " + api_key.strip(),
-                "X-OpenRouter-Title": "Model Router Lab",
+                "X-OpenRouter-Title": "Tern",
             },
         )
 
