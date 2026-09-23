@@ -1,0 +1,6 @@
+# Incremental repair of the already-built research image; clean builds use Dockerfile + uv.lock.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+USER root
+RUN uv pip install --no-cache --python /app/.venv/bin/python nvidia-cuda-runtime-cu12==12.9.79
+USER router

@@ -1,6 +1,8 @@
 *
 !Dockerfile
 !cloudbuild-gpu.yaml
+!cloudbuild-cuda-headers.yaml
+!Dockerfile.cuda-headers
 !.dockerignore
 !pyproject.toml
 !uv.lock
