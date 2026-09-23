@@ -1,0 +1,64 @@
+{
+  "note": "Synthetic short-request feasibility probes, not quality or saturation tests.",
+  "local-mlx-cpu": {
+    "n": 30,
+    "p50_ms": 25461.357507,
+    "p95_ms": 27506.768159300012,
+    "max_ms": 30590.028097000017
+  },
+  "local-torch-cpu": {
+    "n": 30,
+    "p50_ms": 687.855584499971,
+    "p95_ms": 731.2334742999838,
+    "max_ms": 818.0163230000517
+  },
+  "cloud-mlx-cpu": {
+    "client": {
+      "n": 6,
+      "p50_ms": 26449.25579999972,
+      "p95_ms": 28165.188225000522,
+      "max_ms": 28435.431800000515
+    },
+    "server_router": {
+      "n": 6,
+      "p50_ms": 26394.0975,
+      "p95_ms": 28110.72925,
+      "max_ms": 28377.966
+    },
+    "economy_proposals": 0,
+    "reasons": [
+      "inference_budget_exceeded"
+    ]
+  },
+  "cloud-mlx-gpu": {
+    "client": {
+      "n": 60,
+      "p50_ms": 101.23004999968543,
+      "p95_ms": 280.2684399998706,
+      "max_ms": 1222.034899999926
+    },
+    "server_router": {
+      "n": 60,
+      "p50_ms": 9.6595,
+      "p95_ms": 188.82519999999812,
+      "max_ms": 1125.305
+    },
+    "economy_proposals": 0,
+    "reasons": [
+      "shadow_proposal"
+    ],
+    "client_excluding_first_per_case": {
+      "n": 54,
+      "p50_ms": 101.03995000008581,
+      "p95_ms": 104.85535999991953,
+      "max_ms": 108.0128000003242
+    },
+    "model_inference": {
+      "n": 60,
+      "p50_ms": 9.471275499997489,
+      "p95_ms": 188.59761299998848,
+      "max_ms": 1125.1455520000063
+    }
+  },
+  "gpu_vs_cpu_fixture_probability_max_abs_difference": 0.0010000000000000009
+}

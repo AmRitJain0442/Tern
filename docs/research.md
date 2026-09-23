@@ -47,4 +47,6 @@ The provider gateway must own retries, rate limits, health, streaming, and provi
 
 ## Deployment intent
 
-Start with one private Cloud Run CPU instance at most, minimum zero, immutable model revision, baked weights, and no downstream provider calls. This tests real hosting without a continuously billed GPU. GCP project and spending preference have been requested. Cloud Run L4 requires at least 4 vCPU / 16 GiB and instance-based billing; scale-to-zero does not eliminate warm idle cost. [GCP GPU configuration](https://docs.cloud.google.com/run/docs/configuring/services/gpu), [pricing](https://cloud.google.com/run/pricing).
+The user authorized `tribe-v2-host` and subsequently authorized GPU use. A CPU baseline was measured and removed; the private L4 prototype is now hosted in Singapore. It uses immutable model revisions, baked weights, and no downstream provider calls. Cloud Run L4 requires at least 4 vCPU / 16 GiB and instance-based billing; scale-to-zero does not eliminate warm idle cost. [GCP GPU configuration](https://docs.cloud.google.com/run/docs/configuring/services/gpu), [pricing](https://cloud.google.com/run/pricing).
+
+See [measured findings](findings.md), [design and economics](design.md), and [the multi-workload plan](workloads.md) for the research conclusions and remaining experiments.

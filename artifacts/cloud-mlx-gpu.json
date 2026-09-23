@@ -1,0 +1,1037 @@
+{
+  "kind": "sequential_synthetic_hosting_probe_not_quality_evaluation",
+  "created_at": "2026-09-23T13:16:54.909269+00:00",
+  "endpoint": "https://model-router-laya-gpu-635367932686.asia-southeast1.run.app",
+  "anonymous_status": 403,
+  "first_health_ms": 95.1121999996758,
+  "first_health_is_proven_cold_start": false,
+  "health": {
+    "ready": true,
+    "mode": "shadow",
+    "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+  },
+  "rows": [
+    {
+      "case": "rewrite",
+      "repeat": 0,
+      "client_ms": 938.6369000003469,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 836.6187470000028,
+        "router_ms": 836.944,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 1,
+      "client_ms": 99.89309999946272,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 9.048059999997804,
+        "router_ms": 9.208,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 2,
+      "client_ms": 100.49489999983052,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 8.815502000004471,
+        "router_ms": 8.947,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 3,
+      "client_ms": 103.62019999956829,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 9.824886000004085,
+        "router_ms": 10.003,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 4,
+      "client_ms": 99.84509999958391,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 9.085633000012194,
+        "router_ms": 9.224,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 5,
+      "client_ms": 100.73039999952016,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 9.477098000004958,
+        "router_ms": 9.644,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 6,
+      "client_ms": 100.85029999936523,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 8.916701999993393,
+        "router_ms": 9.05,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 7,
+      "client_ms": 104.21020000012504,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 9.931421000004548,
+        "router_ms": 10.103,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 8,
+      "client_ms": 102.21809999984544,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 9.46545299999002,
+        "router_ms": 9.617,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "rewrite",
+      "repeat": 9,
+      "client_ms": 103.13010000027134,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 9.854562999990435,
+        "router_ms": 10.045,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 0,
+      "client_ms": 247.28719999984605,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 155.7163769999903,
+        "router_ms": 155.944,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 1,
+      "client_ms": 99.28649999983463,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 10.77977399999952,
+        "router_ms": 11.0,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 2,
+      "client_ms": 99.18609999931505,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 9.277320999999006,
+        "router_ms": 9.453,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 3,
+      "client_ms": 100.92090000034659,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 9.799805000000106,
+        "router_ms": 9.992,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 4,
+      "client_ms": 101.27379999994446,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 9.09585499999821,
+        "router_ms": 9.259,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 5,
+      "client_ms": 100.38299999996525,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 9.409687000001554,
+        "router_ms": 9.607,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 6,
+      "client_ms": 102.64559999995981,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 9.060184000006188,
+        "router_ms": 9.219,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 7,
+      "client_ms": 101.04150000006484,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 9.185520999992036,
+        "router_ms": 9.346,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 8,
+      "client_ms": 106.91839999981312,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 9.160200000010832,
+        "router_ms": 9.32,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 9,
+      "client_ms": 99.81410000000324,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5789,
+        "inference_ms": 9.123192999993535,
+        "router_ms": 9.282,
+        "input_tokens": 68,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 0,
+      "client_ms": 1222.034899999926,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 1125.1455520000063,
+        "router_ms": 1125.305,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 1,
+      "client_ms": 99.2841999996017,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 9.566823000000113,
+        "router_ms": 9.723,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 2,
+      "client_ms": 100.94449999996868,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 9.73410299999955,
+        "router_ms": 9.884,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 3,
+      "client_ms": 98.90499999983149,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 8.912011999996139,
+        "router_ms": 9.021,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 4,
+      "client_ms": 100.76280000066618,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 9.884814999992386,
+        "router_ms": 10.033,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 5,
+      "client_ms": 99.1863999997804,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 9.29369299998939,
+        "router_ms": 9.419,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 6,
+      "client_ms": 103.03900000053545,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 9.826476999990064,
+        "router_ms": 9.955,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 7,
+      "client_ms": 101.86580000026879,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 9.937886000003004,
+        "router_ms": 10.108,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 8,
+      "client_ms": 102.30580000006739,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 10.010336999997094,
+        "router_ms": 10.174,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 9,
+      "client_ms": 101.02379999989353,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7298,
+        "inference_ms": 9.327855000009322,
+        "router_ms": 9.454,
+        "input_tokens": 59,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 0,
+      "client_ms": 906.912000000375,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 813.3410969999915,
+        "router_ms": 813.568,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 1,
+      "client_ms": 98.39759999977105,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.43681500000082,
+        "router_ms": 9.667,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 2,
+      "client_ms": 104.90190000018629,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.366674999995439,
+        "router_ms": 9.552,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 3,
+      "client_ms": 108.0128000003242,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.169746000011969,
+        "router_ms": 9.343,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 4,
+      "client_ms": 102.02280000066821,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.314015999990488,
+        "router_ms": 9.498,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 5,
+      "client_ms": 102.3406000003888,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.790120000005231,
+        "router_ms": 10.01,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 6,
+      "client_ms": 101.03840000010678,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.546268999997665,
+        "router_ms": 9.753,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 7,
+      "client_ms": 102.11660000004485,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.453331000003118,
+        "router_ms": 9.652,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 8,
+      "client_ms": 101.14389999944251,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.980218999999124,
+        "router_ms": 10.201,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 9,
+      "client_ms": 99.1807999998855,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 9.517987999998923,
+        "router_ms": 9.711,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 0,
+      "client_ms": 159.29999999934807,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 62.97019600000908,
+        "router_ms": 63.185,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 1,
+      "client_ms": 100.48730000016803,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 9.39577899998767,
+        "router_ms": 9.578,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 2,
+      "client_ms": 98.75079999983427,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 9.16446300000473,
+        "router_ms": 9.329,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 3,
+      "client_ms": 100.78119999980117,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 9.891213999992488,
+        "router_ms": 10.1,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 4,
+      "client_ms": 101.29770000003191,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 9.687240999994629,
+        "router_ms": 9.896,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 5,
+      "client_ms": 101.35580000041955,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 10.248657999994748,
+        "router_ms": 10.465,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 6,
+      "client_ms": 99.24289999980829,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 9.349252000006913,
+        "router_ms": 9.516,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 7,
+      "client_ms": 99.96010000031674,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 9.79538400000024,
+        "router_ms": 9.996,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 8,
+      "client_ms": 104.83029999977589,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 9.808573999990244,
+        "router_ms": 10.01,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 9,
+      "client_ms": 103.89480000048934,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 9.217055999997115,
+        "router_ms": 9.378,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 0,
+      "client_ms": 155.596699999478,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 63.83313700000315,
+        "router_ms": 64.046,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 1,
+      "client_ms": 99.19300000001385,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.260564999991061,
+        "router_ms": 9.439,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 2,
+      "client_ms": 103.73429999981454,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.057209000005173,
+        "router_ms": 9.208,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 3,
+      "client_ms": 101.38769999957731,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.551287999997271,
+        "router_ms": 9.722,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 4,
+      "client_ms": 103.83889999957319,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.66186799999491,
+        "router_ms": 9.857,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 5,
+      "client_ms": 102.28139999981067,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.212589000000548,
+        "router_ms": 9.369,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 6,
+      "client_ms": 104.0649000005942,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.550799999999526,
+        "router_ms": 9.728,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 7,
+      "client_ms": 99.99470000002475,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.149815000000672,
+        "router_ms": 9.303,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 8,
+      "client_ms": 100.43519999999262,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.152387000000317,
+        "router_ms": 9.307,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 9,
+      "client_ms": 101.18629999942641,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8825,
+        "inference_ms": 9.266370999995388,
+        "router_ms": 9.417,
+        "input_tokens": 66,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    }
+  ],
+  "median_client_ms": 101.23004999968543,
+  "constraints_passed": true
+}

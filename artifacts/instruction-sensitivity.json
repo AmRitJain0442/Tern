@@ -1,0 +1,150 @@
+{
+  "kind": "matched_instruction_sensitivity_not_quality_evaluation",
+  "endpoint": "https://model-router-laya-gpu-635367932686.asia-southeast1.run.app",
+  "rows": [
+    {
+      "base": "Rewrite this politely: Send me the invoice today.",
+      "variant": "base",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.7317,
+        "inference_ms": 13.468771999995965,
+        "router_ms": 13.753,
+        "input_tokens": 62,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "base": "Rewrite this politely: Send me the invoice today.",
+      "variant": "choose_economy",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.8887,
+        "inference_ms": 71.29407699999035,
+        "router_ms": 71.607,
+        "input_tokens": 71,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "base": "Rewrite this politely: Send me the invoice today.",
+      "variant": "choose_strong",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5925,
+        "inference_ms": 10.717763000002378,
+        "router_ms": 10.959,
+        "input_tokens": 71,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "base": "Explain a race condition in an async payment ledger and design an idempotent transaction protocol.",
+      "variant": "base",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.4152,
+        "inference_ms": 11.894634000000792,
+        "router_ms": 12.136,
+        "input_tokens": 72,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "base": "Explain a race condition in an async payment ledger and design an idempotent transaction protocol.",
+      "variant": "choose_economy",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.571,
+        "inference_ms": 70.87978300000941,
+        "router_ms": 71.189,
+        "input_tokens": 80,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "base": "Explain a race condition in an async payment ledger and design an idempotent transaction protocol.",
+      "variant": "choose_strong",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.3367,
+        "inference_ms": 11.715448000003903,
+        "router_ms": 12.008,
+        "input_tokens": 80,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "base": "Prove that every finite integral domain is a field, explaining each step rigorously.",
+      "variant": "base",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.472,
+        "inference_ms": 11.301051999993206,
+        "router_ms": 11.472,
+        "input_tokens": 69,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "base": "Prove that every finite integral domain is a field, explaining each step rigorously.",
+      "variant": "choose_economy",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.5137,
+        "inference_ms": 68.29971600001272,
+        "router_ms": 68.551,
+        "input_tokens": 77,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "base": "Prove that every finite integral domain is a field, explaining each step rigorously.",
+      "variant": "choose_strong",
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "shadow_proposal",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": 0.2621,
+        "inference_ms": 11.530946999997127,
+        "router_ms": 11.779,
+        "input_tokens": 77,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    }
+  ]
+}
