@@ -1,0 +1,396 @@
+{
+  "kind": "sequential_synthetic_hosting_probe_not_quality_evaluation",
+  "created_at": "2026-09-23T13:02:31.305896+00:00",
+  "endpoint": "https://model-router-laya-635367932686.asia-south1.run.app",
+  "anonymous_status": 403,
+  "first_health_ms": 39.66450000007171,
+  "first_health_is_proven_cold_start": false,
+  "health": {
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Model Router Lab",
+      "version": "0.1.0"
+    },
+    "paths": {
+      "/healthz": {
+        "get": {
+          "summary": "Health",
+          "operationId": "health_healthz_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/route": {
+        "post": {
+          "summary": "Route",
+          "operationId": "route_v1_route_post",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RouteResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "RouteRequest": {
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "maxLength": 16000,
+              "minLength": 1,
+              "title": "Prompt"
+            },
+            "language": {
+              "type": "string",
+              "maxLength": 32,
+              "title": "Language",
+              "default": "unknown"
+            },
+            "requires_tools": {
+              "type": "boolean",
+              "title": "Requires Tools",
+              "default": false
+            },
+            "requires_vision": {
+              "type": "boolean",
+              "title": "Requires Vision",
+              "default": false
+            },
+            "requires_private_processing": {
+              "type": "boolean",
+              "title": "Requires Private Processing",
+              "default": false
+            },
+            "high_stakes": {
+              "type": "boolean",
+              "title": "High Stakes",
+              "default": false
+            },
+            "has_conversation_history": {
+              "type": "boolean",
+              "title": "Has Conversation History",
+              "default": false
+            },
+            "eligible_tiers": {
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economy",
+                  "strong"
+                ]
+              },
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 1,
+              "title": "Eligible Tiers"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "prompt"
+          ],
+          "title": "RouteRequest"
+        },
+        "RouteResponse": {
+          "properties": {
+            "selected_tier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "economy",
+                    "strong"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Selected Tier"
+            },
+            "proposed_tier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "economy",
+                    "strong"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Proposed Tier"
+            },
+            "reason": {
+              "type": "string",
+              "title": "Reason"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "shadow",
+                "experimental"
+              ],
+              "title": "Mode"
+            },
+            "policy_version": {
+              "type": "string",
+              "title": "Policy Version",
+              "default": "binary-shadow-v1"
+            },
+            "probability_economy": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Probability Economy"
+            },
+            "inference_ms": {
+              "type": "number",
+              "title": "Inference Ms",
+              "default": 0
+            },
+            "router_ms": {
+              "type": "number",
+              "title": "Router Ms",
+              "default": 0
+            },
+            "input_tokens": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Input Tokens"
+            },
+            "model_revision": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Model Revision"
+            }
+          },
+          "type": "object",
+          "required": [
+            "selected_tier",
+            "proposed_tier",
+            "reason",
+            "mode"
+          ],
+          "title": "RouteResponse"
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            },
+            "input": {
+              "title": "Input"
+            },
+            "ctx": {
+              "type": "object",
+              "title": "Context"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "case": "rewrite",
+      "repeat": 0,
+      "client_ms": 25270.60370000072,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "inference_budget_exceeded",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": null,
+        "inference_ms": 0.0,
+        "router_ms": 25239.38,
+        "input_tokens": null,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "extract",
+      "repeat": 0,
+      "client_ms": 27354.457500000535,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "inference_budget_exceeded",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": null,
+        "inference_ms": 0.0,
+        "router_ms": 27309.019,
+        "input_tokens": null,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "arithmetic",
+      "repeat": 0,
+      "client_ms": 23649.589599999672,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "inference_budget_exceeded",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": null,
+        "inference_ms": 0.0,
+        "router_ms": 23611.808,
+        "input_tokens": null,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "code",
+      "repeat": 0,
+      "client_ms": 28435.431800000515,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "inference_budget_exceeded",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": null,
+        "inference_ms": 0.0,
+        "router_ms": 28377.966,
+        "input_tokens": null,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "reasoning",
+      "repeat": 0,
+      "client_ms": 26848.992700000053,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "inference_budget_exceeded",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": null,
+        "inference_ms": 0.0,
+        "router_ms": 26793.061,
+        "input_tokens": null,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    },
+    {
+      "case": "injection",
+      "repeat": 0,
+      "client_ms": 26049.518899999384,
+      "response": {
+        "selected_tier": "strong",
+        "proposed_tier": "strong",
+        "reason": "inference_budget_exceeded",
+        "mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "probability_economy": null,
+        "inference_ms": 0.0,
+        "router_ms": 25995.134,
+        "input_tokens": null,
+        "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+      }
+    }
+  ],
+  "median_client_ms": 26449.25579999972,
+  "constraints_passed": true
+}
