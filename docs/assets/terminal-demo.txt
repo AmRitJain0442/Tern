@@ -3,14 +3,15 @@ $ uv run tern demo
   TERN  /  small router. clear decisions.
   OFFLINE DEMO  ·  real adapter, synthetic responses
 
-  REQUEST                                  ROUTE      WHY
-  Rewrite this politely: send the          ECONOMY    0.82 >= 0.70 threshold
-  report.
-  Design a thread-safe LRU cache.          STRONG     0.41 < 0.70 threshold
-  Look up the weather in Paris.            STRONG     tool capability required
-  Demonstrate a classifier outage.         STRONG     classifier unavailable
+  SCENARIO                 COUNT    ROUTE      WHY
+  Polite rewrites             25    ECONOMY    0.82 >= 0.70 threshold
+  Coding tasks                25    STRONG     0.41 < 0.70 threshold
+  Weather tool requests       25    STRONG     tool capability required
+  Classifier outages          25    STRONG     classifier unavailable
 
-  4 routes completed  ·  no API key  ·  no GPU  ·  no network
+  100 requests completed  25 economy  75 strong
+  No API key  ·  no GPU  ·  no network
   Illustrative scores. Live routing defaults to the strong model.
+  Every request: tern demo --all  JSON: tern demo --json
 
   Next  tern init  then  tern doctor

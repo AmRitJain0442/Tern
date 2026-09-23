@@ -17,7 +17,15 @@ These commands work in PowerShell, bash and zsh. The repository is private, so y
 
 Upgrading from Model Router? Run `uv sync --extra cli` to install the new `tern` command. The `model-router` command remains an alias, and existing `model_router` Python imports continue to work.
 
-The demo exercises the actual adapter using in-process HTTP transports. Its four synthetic cases demonstrate economy selection, strong selection, tool bypass and classifier failure fallback. They are not live inferences or quality benchmarks.
+The demo sends **100 distinct synthetic requests** through the actual adapter using in-process HTTP transports: 25 polite rewrites, 25 coding tasks, 25 weather tool requests, and 25 classifier-outage cases. They demonstrate economy selection, strong selection, tool bypass and classifier failure fallback. The outages are interleaved with successful classifier calls so each demonstrates an isolated failure. These are not live inferences or quality benchmarks.
+
+```sh
+uv run tern demo          # Compact summary: 25 economy, 75 strong
+uv run tern demo --all    # Show all 100 requests and their routing reasons
+uv run tern demo --json   # Export summary and every request/response as JSON
+```
+
+All three modes execute the same 100 requests. Their scores and responses are synthetic; the counts describe this demo's fixtures, not expected routing proportions for real traffic.
 
 ## 2. Add local configuration
 

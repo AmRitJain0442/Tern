@@ -38,7 +38,9 @@ uv sync --extra cli --python 3.12
 uv run tern demo
 ```
 
-**No API key. No GPU. No network calls in the demo.** Installation downloads Python packages; the demo itself runs locally through the real adapter with synthetic model responses.
+**100 requests. No API key. No GPU. No network calls in the demo.** Installation downloads Python packages; the demo itself runs locally through the real adapter with synthetic model responses. It covers 25 distinct prompts each for rewrites, coding, tool requests, and classifier outages.
+
+Use `uv run tern demo --all` to see every request, or `uv run tern demo --json` to export all results. The default view summarizes the 100 completed requests.
 
 ![Actual terminal output showing economy routing, strong routing, tool bypass and classifier failure fallback](docs/assets/terminal-demo.png)
 
