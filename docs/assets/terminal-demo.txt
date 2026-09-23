@@ -3,12 +3,12 @@ $ uv run model-router demo
   MODEL ROUTER  /  choose the right model
   OFFLINE DEMO  ·  real adapter, synthetic responses
 
-  REQUEST                                  ROUTE      WHY                       
-  Rewrite this politely: send the          ECONOMY    0.82 >= 0.70 threshold    
-  report.                                                                       
-  Design a thread-safe LRU cache.          STRONG     0.41 < 0.70 threshold     
-  Look up the weather in Paris.            STRONG     tool capability required  
-  Demonstrate a classifier outage.         STRONG     classifier unavailable    
+  REQUEST                                  ROUTE      WHY
+  Rewrite this politely: send the          ECONOMY    0.82 >= 0.70 threshold
+  report.
+  Design a thread-safe LRU cache.          STRONG     0.41 < 0.70 threshold
+  Look up the weather in Paris.            STRONG     tool capability required
+  Demonstrate a classifier outage.         STRONG     classifier unavailable
 
   4 routes completed  ·  no API key  ·  no GPU  ·  no network
   Illustrative scores. Live routing defaults to the strong model.

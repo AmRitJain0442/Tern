@@ -66,7 +66,8 @@ def capture(command, stem, caption, browser):
     console.print(Text.from_ansi(result.stdout), end="")
     plain = console.export_text(clear=False)
     terminal = console.export_html(inline_styles=True, code_format="{code}", theme=THEME)
-    (ASSETS / f"{stem}.txt").write_text(plain, encoding="utf-8")
+    transcript = "\n".join(line.rstrip() for line in plain.splitlines()) + "\n"
+    (ASSETS / f"{stem}.txt").write_text(transcript, encoding="utf-8")
     html = """<!doctype html><html><head><meta charset="utf-8"><style>
       * { box-sizing: border-box; }
       body { margin: 0; background: #101418; padding: 30px; color: #e8e8dd; }
