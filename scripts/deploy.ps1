@@ -7,8 +7,9 @@ param(
 $ErrorActionPreference = 'Stop'
 $identity = "model-router-runtime@$Project.iam.gserviceaccount.com"
 # Create the dedicated runtime identity once; it needs no project permissions.
-gcloud iam service-accounts describe $identity --project=$Project --format='value(email)' 2>$null
-if ($LASTEXITCODE -ne 0) {
+$existing = gcloud iam service-accounts list --project=$Project --filter="email=$identity" --format='value(email)'
+if ($LASTEXITCODE -ne 0) { throw 'Service account lookup failed' }
+if (-not $existing) {
     gcloud iam service-accounts create model-router-runtime --project=$Project --display-name='Laya routing experiment'
     if ($LASTEXITCODE -ne 0) { throw 'Service account creation failed' }
 }
