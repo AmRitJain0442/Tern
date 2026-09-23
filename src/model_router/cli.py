@@ -258,8 +258,32 @@ def parser():
     )
     commands = result.add_subparsers(dest="command", required=True)
     demo = commands.add_parser(
-        "demo", help="route 100 synthetic requests offline, without credentials"
+        "demo", help="route 100 requests offline, or use --live for real GPU/OpenRouter calls"
     )
+    demo.add_argument(
+        "--live", action="store_true", help="make 100 paid requests through GCP and OpenRouter"
+    )
+    demo.add_argument(
+        "--output", type=Path, help="live results file (default: timestamped file in artifacts/)"
+    )
+    demo.add_argument(
+        "--max-tokens",
+        type=positive_int,
+        default=2048,
+        help="live output cap per attempt (default: 2048)",
+    )
+    demo.add_argument(
+        "--concurrency",
+        type=positive_int,
+        default=4,
+        help="live generation concurrency, 1..8 (default: 4)",
+    )
+    demo.add_argument(
+        "--experimental-threshold",
+        type=threshold,
+        help="explicit live economy threshold; default respects shadow mode",
+    )
+    demo.add_argument("--auth", choices=["gcloud", "google"], default="gcloud")
     demo_output = demo.add_mutually_exclusive_group()
     demo_output.add_argument(
         "--json", action="store_true", help="emit all 100 results and summary as JSON"
@@ -327,6 +351,29 @@ def main(argv=None, *, console=None):
     console = console or make_console()
     try:
         if args.command == "demo":
+            if args.live:
+                from dotenv import load_dotenv
+
+                from model_router.live_demo import run_live_demo
+
+                load_dotenv(args.env_file, override=False)
+                progress_console = make_console(stderr=True) if args.json else console
+                report, path = asyncio.run(
+                    run_live_demo(
+                        output=args.output,
+                        max_tokens=args.max_tokens,
+                        concurrency=args.concurrency,
+                        experimental_threshold=args.experimental_threshold,
+                        auth=args.auth,
+                        progress=lambda text: progress_console.print(
+                            text, markup=False, highlight=False
+                        ),
+                    )
+                )
+                emit_json(console, report if args.json else report["summary"])
+                if not args.json:
+                    console.print(f"Results saved: {path}", markup=False)
+                return 1 if report["summary"]["failed"] else 0
             from model_router.demo import run_demo
 
             data = asyncio.run(run_demo())
