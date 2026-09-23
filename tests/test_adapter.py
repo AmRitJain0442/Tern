@@ -365,6 +365,27 @@ def test_catalog_resolution_and_parameter_eligibility():
     asyncio.run(run())
 
 
+@pytest.mark.parametrize("status", [200, 401])
+def test_key_check_validates_auth_without_returning_account_data(status):
+    seen = []
+
+    def handler(request):
+        seen.append(request.url.path)
+        return httpx.Response(status, json={"data": {"label": "private-key-label"}})
+
+    async def run():
+        async with OpenRouterClient("test", transport=httpx.MockTransport(handler)) as api:
+            if status == 200:
+                assert await api.check_credentials() is None
+            else:
+                with pytest.raises(ProviderError) as exc:
+                    await api.check_credentials()
+                assert "private-key-label" not in str(exc.value)
+        assert seen == ["/api/v1/key"]
+
+    asyncio.run(run())
+
+
 def test_request_snapshot_survives_caller_mutation():
     async def run():
         request = REQUEST.model_copy(deep=True)

@@ -61,6 +61,22 @@ class OpenRouterClient:
     async def aclose(self):
         await self._http.aclose()
 
+    async def check_credentials(self) -> None:
+        """Validate the key without generating text or exposing account metadata."""
+        try:
+            async with asyncio.timeout(self.timeout):
+                response = await self._http.get("/key")
+                self._check_status(response)
+                payload = response.json()
+                if not isinstance(payload, dict) or not isinstance(payload.get("data"), dict):
+                    raise ProviderError(None, kind="invalid_response")
+        except (TimeoutError, httpx.TimeoutException):
+            raise ProviderError(None, kind="timeout") from None
+        except httpx.HTTPError:
+            raise ProviderError(None, kind="transport_error") from None
+        except ValueError:
+            raise ProviderError(None, kind="invalid_response") from None
+
     async def models(self, assignments: dict[str, str]) -> list[ModelSpec]:
         """Resolve explicit IDs against current public catalog; no model-name guessing."""
         response = await self._http.get("/models")

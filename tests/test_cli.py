@@ -96,3 +96,13 @@ def test_long_prompt_requires_explicit_bound(monkeypatch):
     args = parser().parse_args(["chat", "x" * 4097])
     with pytest.raises(ValueError, match="--input-tokens"):
         asyncio.run(chat(args, make_console(file=io.StringIO())))
+
+
+def test_json_is_machine_readable_even_in_narrow_terminal():
+    from model_router.cli import emit_json
+
+    output = io.StringIO()
+    console = make_console(file=output, width=20, color_system=None)
+    payload = {"content": "a long answer " * 100, "markup": "[red]literal[/]"}
+    emit_json(console, payload)
+    assert json.loads(output.getvalue()) == payload

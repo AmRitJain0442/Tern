@@ -44,6 +44,11 @@ def heading(console, subtitle):
     console.print()
 
 
+def emit_json(console, data):
+    # Console line wrapping must not insert literal newlines into JSON strings.
+    console.print(json.dumps(data), markup=False, highlight=False, soft_wrap=True)
+
+
 def show_demo(console, data):
     from rich.table import Table
 
@@ -139,10 +144,11 @@ def make_laya(args):
 
 
 async def doctor_live(args):
+    async with OpenRouterClient(os.environ["OPENROUTER_API_KEY"]) as provider:
+        await provider.check_credentials()
+        await provider.models(assignments())
     async with make_laya(args) as laya:
         await laya.warmup()
-    async with OpenRouterClient(os.environ["OPENROUTER_API_KEY"]) as provider:
-        await provider.models(assignments())
 
 
 def assignments():
@@ -200,7 +206,7 @@ async def chat(args, console):
         else:
             result = await router.complete(request, context)
             if args.json:
-                console.print_json(result.model_dump_json())
+                emit_json(console, result.model_dump(mode="json"))
             else:
                 console.print(
                     f"\n  Route: {result.routing.model} ({result.routing.reason})\n", markup=False
@@ -290,7 +296,7 @@ def main(argv=None, *, console=None):
 
             data = asyncio.run(run_demo())
             if args.json:
-                console.print_json(json.dumps(data))
+                emit_json(console, data)
             else:
                 show_demo(console, data)
             return 0
