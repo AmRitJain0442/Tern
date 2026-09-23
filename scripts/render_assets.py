@@ -57,7 +57,16 @@ def capture(command, stem, caption, browser):
         text=True,
         encoding="utf-8",
         timeout=30,
-        env={**os.environ, "COLUMNS": "108", "FORCE_COLOR": "1", "PYTHONIOENCODING": "utf-8"},
+        env={
+            **os.environ,
+            "COLUMNS": "108",
+            "FORCE_COLOR": "1",
+            "PYTHONIOENCODING": "utf-8",
+            # Document the default local setup, independent of the maintainer's .env.
+            "LAYA_ENDPOINT": "http://127.0.0.1:8080",
+            "LAYA_AUTH": "local",
+            "OPENROUTER_API_KEY": "",
+        },
     )
     if result.returncode:
         raise RuntimeError(

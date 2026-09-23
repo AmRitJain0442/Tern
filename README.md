@@ -25,22 +25,41 @@
 
 Tern uses [Laya-MLX](https://huggingface.co/aac6fef/laya-mlx) to help choose between economy and strong models, then sends your request through OpenRouter. It combines capability checks, conservative fallback, and an async Python adapter that preserves messages, tool calls, streaming chunks, and usage.
 
-Start with the free offline demo. Connect your private GPU endpoint when you're ready.
+Run real Laya locally with one setup command. No GCP account or API key is needed for classification.
 
-## Try it in a minute
+## Start locally
 
-Requires [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git. The repository currently requires collaborator access.
+Requires Git and a running Docker installation with Compose v2. The repository currently requires collaborator access.
 
 ```sh
 git clone https://github.com/AmRitJain0442/tern.git
 cd tern
-uv sync --extra cli --python 3.12
-uv run tern demo
+docker compose up --build --wait
 ```
 
-**100 requests. No API key. No GPU. No network calls in the demo.** Installation downloads Python packages; the demo itself runs locally through the real adapter with synthetic model responses. It covers 25 distinct prompts each for rewrites, coding, tool requests, and classifier outages.
+With [Docker Desktop](https://docs.docker.com/desktop/) or Docker Engine + Compose installed and running, that one command installs Python, MLX and Tern inside a container, downloads the pinned Laya checkpoint, and starts the local service. It returns when model loading and a real inference check succeed. The default uses your CPU and persists weights across restarts. Initial setup requires internet and several GB of disk/RAM; no separate Python, CUDA or cloud setup is needed.
 
-Use `uv run tern demo --all` to see every request, or `uv run tern demo --json` to export all results. The default view summarizes the 100 completed requests.
+**Make a real local decision:**
+
+```sh
+docker compose exec laya tern route "Rewrite politely: send the report."
+```
+
+This returns actual Laya probabilities. The default shadow policy still selects the strong tier; the classifier proposal is reported separately. No downstream LLM is called.
+
+Verified on Windows with Docker's Linux CPU runtime, including a restart and real inference with networking disabled. [Recorded local check](artifacts/local-setup-smoke.json). CPU inference took about 23 seconds on that machine; use Metal or supported NVIDIA hardware for faster local routing.
+
+**Apple Silicon:** use native Metal instead of an emulated Docker CPU:
+
+```sh
+uv run --python 3.12 --extra cli --extra mlx-metal tern serve
+```
+
+With [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git installed, this installs the runtime, downloads Laya on first load, and starts a local Metal service. Keep that terminal open. See [platform requirements, optional NVIDIA acceleration and cloud hosting](docs/quickstart.md).
+
+**Want the synthetic preview instead?** `docker compose exec laya tern demo` runs 100 fixture requests through the real adapter with synthetic scores and responses. It covers rewrites, coding, tool requests and classifier outages. It is separate from real local inference.
+
+Add `--all` to the demo command to see every fixture, or `--json` to export its results. The screenshot below shows this synthetic preview, not local model inference.
 
 ![Actual terminal output showing economy routing, strong routing, tool bypass and classifier failure fallback](docs/assets/terminal-demo.png)
 
@@ -49,33 +68,32 @@ Use `uv run tern demo --all` to see every request, or `uv run tern demo --json` 
 ## Connect your models
 
 ```sh
-uv run tern init
-# Add your OpenRouter key to .env. Existing values are never overwritten.
-gcloud auth login
-uv run tern doctor --live
-uv run tern chat "Explain idempotency in two sentences." --stream
+# Add OPENROUTER_API_KEY=your-key to a .env file in this directory, then:
+docker compose up --wait
+docker compose exec laya tern doctor --live
+docker compose exec laya tern chat "Explain idempotency in two sentences." --stream
 ```
 
-The CLI reads `.env` automatically. Live use needs an OpenRouter key and Cloud Run invoker access to the configured Laya service. The default endpoint is private; use your own `LAYA_ENDPOINT` if you are deploying separately. `doctor --live` checks access and wakes the GPU without buying an LLM completion. Live GPU use and `chat` can incur charges.
+Laya runs on your machine; OpenRouter generates the answer and charges for those generations. Compose reads the key from your shell or `.env`, and restarting with `up --wait` applies configuration changes. `doctor --live` checks local readiness and, when a key is present, OpenRouter access without buying a completion. GCP hosting is optional. The Python CLI also defaults to local Laya and preserves explicitly configured remote endpoints.
 
 **Run 100 real requests** after setup:
 
 ```sh
-uv run tern demo --live --experimental-threshold 0.7
+docker compose exec laya tern demo --live --experimental-threshold 0.7
 ```
 
-This makes paid OpenRouter calls using real GPU decisions for eligible text prompts. It covers 25 rewrites, 25 coding tasks, 25 tool-call requests, and 25 summaries, and saves every response and routing decision to a timestamped JSON file in `artifacts/`. Tool requests bypass classification; returned tool calls are validated but not executed. Output is capped at 2,048 tokens per attempt, with four concurrent generations. Omit the experimental threshold to follow the service's shadow policy. [Live-run details →](docs/quickstart.md#run-100-live-requests)
+This makes paid OpenRouter calls using real Laya decisions for eligible text prompts. It covers 25 rewrites, 25 coding tasks, 25 tool-call requests, and 25 summaries, and saves every response and routing decision to a timestamped JSON file in `artifacts/`. Tool requests bypass classification; returned tool calls are validated but not executed. Output is capped at 2,048 tokens per attempt, with four concurrent generations. Omit the experimental threshold to follow the service's shadow policy. [Live-run details →](docs/quickstart.md#run-100-live-requests)
 
 [Recorded live run](docs/live-results.md): **100/100 completions**, 65 Flash Lite / 35 Pro, **$0.1965** reported OpenRouter cost excluding GCP; three classifier fallbacks and one truncated answer.
 
-![Actual setup checker output showing a hidden credential value, configured HTTPS endpoint and local Google authentication check](docs/assets/terminal-doctor.png)
+![Setup checker example](docs/assets/terminal-doctor.png)
 
-<sub>The screenshot shows local checks. Add `--live` to verify the key, model catalog and GPU readiness. [Text transcript](docs/assets/terminal-doctor.txt).</sub>
+<sub>The screenshot shows local configuration checks. Add `--live` to verify Laya readiness and optional OpenRouter access. [Text transcript](docs/assets/terminal-doctor.txt).</sub>
 
-The GPU service runs in **shadow mode**, so live requests default to the strong model. To explicitly try economy routing:
+The service runs in **shadow mode**, so live requests default to the strong model. To explicitly try economy routing:
 
 ```sh
-uv run tern chat "Rewrite politely: send the report." --experimental-threshold 0.7
+docker compose exec laya tern chat "Rewrite politely: send the report." --experimental-threshold 0.7
 ```
 
 That threshold is an experiment, not a quality guarantee. [Full setup and troubleshooting →](docs/quickstart.md)
@@ -84,19 +102,19 @@ That threshold is an experiment, not a quality guarantee. [Full setup and troubl
 
 | Capability | What you get |
 |:--|:--|
-| **GPU decisions** | Laya inference on MLX, hosted on a private GCP L4 service |
+| **Local decisions** | Real Laya inference on CPU, Apple Metal or NVIDIA CUDA; cloud hosting is optional |
 | **Explicit eligibility** | Model capabilities, context budgets, output limits and allowlists checked before dispatch |
 | **Conservative fallback** | Classifier deadlines and a circuit breaker; at most one economy-to-strong retry for explicit retryable failures |
 | **Streaming intact** | Async SSE, tool-call deltas, usage and finish reasons; no replay after output starts |
 | **A visible decision** | Selected model, reason, score, policy version and attempted models in the Python result |
-| **A small local footprint** | Use the adapter from a laptop or server; MLX stays on the GPU host |
+| **One-command setup** | Runtime, pinned model download, persistent cache and readiness checks through Compose |
 
 ## How it works
 
 ```mermaid
 flowchart LR
     A[Your request] --> B[Eligibility checks]
-    B -->|Supported short text| C[Laya · MLX GPU]
+    B -->|Supported short text| C[Laya · local or hosted MLX]
     B -->|History, tools, modalities| E[Strong model]
     C --> D[Routing policy]
     D -->|Explicit economy policy| F[Economy model]

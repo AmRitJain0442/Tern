@@ -3,8 +3,8 @@ $ uv run tern doctor
   TERN  /  small router. clear decisions.
   SETUP CHECK  ·  credential values are never printed
 
-  OK   OpenRouter credential: present (value hidden)
-  OK   GPU endpoint: HTTPS origin configured
-  OK   Google authentication: gcloud available; run gcloud auth login
+  OK   OpenRouter credential: optional; add OPENROUTER_API_KEY for chat
+  OK   Laya endpoint: local loopback configured
+  OK   Authentication: local; no Google account needed
 
   Local checks only. Run tern doctor --live to verify access.

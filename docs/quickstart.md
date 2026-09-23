@@ -1,105 +1,139 @@
-# From clone to first route
+# From clone to real local routing
 
-The fastest first run is local and free. Cloud access is only needed for live routing.
+GCP is optional. Local Laya classification needs no API key; OpenRouter is needed only when you want downstream answers.
 
-## 1. Try the offline demo
+## 1. One-command setup
 
-Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git, then:
+Clone the repository and enter it (the repository is currently private, so collaborator access is required):
 
 ```sh
 git clone https://github.com/AmRitJain0442/tern.git
 cd tern
-uv sync --extra cli --python 3.12
-uv run tern demo
 ```
 
-These commands work in PowerShell, bash and zsh. The repository is private, so your GitHub account needs collaborator access. `uv` can install Python 3.12 if it is missing. You do not need CUDA, MLX, Docker, Google Cloud or an API key on your laptop for this demo.
-
-Upgrading from Model Router? Run `uv sync --extra cli` to install the new `tern` command. The `model-router` command remains an alias, and existing `model_router` Python imports continue to work.
-
-The demo sends **100 distinct synthetic requests** through the actual adapter using in-process HTTP transports: 25 polite rewrites, 25 coding tasks, 25 weather tool requests, and 25 classifier-outage cases. They demonstrate economy selection, strong selection, tool bypass and classifier failure fallback. The outages are interleaved with successful classifier calls so each demonstrates an isolated failure. These are not live inferences or quality benchmarks.
+Install and start [Docker Desktop](https://docs.docker.com/desktop/) or Docker Engine with Compose v2. Then run this in PowerShell, bash or zsh:
 
 ```sh
-uv run tern demo          # Compact summary: 25 economy, 75 strong
-uv run tern demo --all    # Show all 100 requests and their routing reasons
-uv run tern demo --json   # Export summary and every request/response as JSON
+docker compose up --build --wait
 ```
 
-All three modes execute the same 100 requests. Their scores and responses are synthetic; the counts describe this demo's fixtures, not expected routing proportions for real traffic.
+The command builds a Python/MLX runtime, downloads checkpoint `aac6fef/laya-mlx` at the pinned revision, loads it, performs a real forward pass, and waits for the service to become healthy. It runs in the background. You do not need host Python, uv, Google credentials or an API key. Package/model downloads require internet during the first setup; cached model startup and local inference do not.
 
-## 2. Add local configuration
+The default container runs Linux x86_64 CPU inference. Windows uses Docker Desktop's Linux engine (normally WSL2). Allow several GB of disk space and at least 4 GB of available Docker memory; more may be needed with longer inputs. CPU inference can take tens of seconds. Apple Silicon users should use the native Metal command below rather than x86 emulation. This setup does not download downstream generative LLMs.
+
+The service is published only on `127.0.0.1:8080`. Weights and generated reports use persistent Docker volumes, independent of image rebuilds. Repeating setup is safe; it reuses complete weights. Interrupted model downloads resume through Hugging Face's cache. An occupied port produces an error rather than replacing another service.
 
 ```sh
-uv run tern init
+docker compose logs -f laya       # Download/startup progress; Ctrl+C leaves the service running
+docker compose stop              # Stop; keep weights and results
+docker compose up --wait         # Start again with cached weights
 ```
 
-Open `.env` in your editor and fill in:
+`docker compose down` also keeps the volumes. Adding `--volumes` would delete downloaded weights and saved results.
+
+## 2. Make a real decision
+
+```sh
+docker compose exec laya tern route "Rewrite politely: send the report."
+docker compose exec laya tern doctor --live
+```
+
+`route` uses actual Laya inference and prints the selected tier, proposed tier, score, reason and timings as JSON. It never calls OpenRouter. The service defaults to **shadow mode**: it reports Laya's proposed tier and probability but selects `strong`. These scores are not demonstrated downstream answer-quality probabilities.
+
+`doctor --live` verifies Laya readiness. If an OpenRouter key is configured it also validates that key and the model catalog, without purchasing a generation. With no key it checks only Laya.
+
+## 3. Generate answers (optional)
+
+Create a `.env` file in the repository root with your own key, or add it to your existing file:
 
 ```dotenv
 OPENROUTER_API_KEY=your-key-here
-OPENROUTER_ECONOMY_MODEL=google/gemini-2.5-flash-lite
-OPENROUTER_STRONG_MODEL=google/gemini-2.5-pro
+```
+
+Then apply the configuration and send a prompt:
+
+```sh
+docker compose up --wait
+docker compose exec laya tern chat "Explain idempotency in two sentences." --stream
+```
+
+Compose reads `.env` automatically; shell variables take precedence. The key is passed at runtime, not baked into the image. It is ignored by Git. Existing files are never rewritten by setup. The default models are `google/gemini-2.5-flash-lite` and `google/gemini-2.5-pro`; override them using `OPENROUTER_ECONOMY_MODEL` and `OPENROUTER_STRONG_MODEL`.
+
+Generation uses OpenRouter and is paid. To try both tiers explicitly:
+
+```sh
+docker compose exec laya tern chat "Rewrite politely: send the report." --experimental-threshold 0.7
+```
+
+The threshold is experimental and uncalibrated; capability checks and conservative fallback still apply.
+
+## Apple Silicon: native Metal
+
+Requires macOS 14+, an Apple Silicon Mac, Git and [uv](https://docs.astral.sh/uv/getting-started/installation/). From the clone, one command installs Python 3.12 if needed, installs the MLX runtime, downloads the pinned model and starts the server:
+
+```sh
+uv run --python 3.12 --extra cli --extra mlx-metal tern serve
+```
+
+Keep that terminal open; Ctrl+C stops the service. In another terminal in the same directory:
+
+```sh
+uv run --no-sync tern route "Rewrite politely: send the report."
+uv run --no-sync tern doctor --live
+```
+
+For answers, add the OpenRouter key to `.env`, then use `uv run --no-sync tern chat "Hello" --stream`. Use `--no-sync` in the second terminal so uv does not remove inference extras while the server is running. Later starts reuse the Hugging Face cache. `tern serve --port 8081` changes the port; set clients' `LAYA_ENDPOINT` accordingly. This Mac path follows upstream MLX support; the local Docker CPU path is the one validated on the maintainer's Windows machine. [MLX platform requirements](https://ml-explore.github.io/mlx/build/html/install.html).
+
+## Optional NVIDIA acceleration
+
+On Linux/WSL2 with a compatible NVIDIA GPU/driver and Docker GPU support configured:
+
+```sh
+docker compose -f compose.yaml -f compose.gpu.yaml up --build --wait
+```
+
+This installs the CUDA runtime instead of the CPU runtime and reuses the same weights. Host GPU drivers and the NVIDIA Container Toolkit are prerequisites; setup does not install or change drivers. MLX CUDA 12 requires NVIDIA SM 7.5+ and driver 550.54.14+; see the [upstream requirements](https://ml-explore.github.io/mlx/build/html/install.html#cuda). Local GPU availability varies by host. Metal cannot be used from a Linux container.
+
+## Optional remote/GCP service
+
+The native CLI defaults to local Laya. To use your own private Cloud Run service, put these settings in `.env`:
+
+```dotenv
 LAYA_ENDPOINT=https://your-private-service.run.app
+LAYA_AUTH=gcloud
 ```
 
-`init` uses this project's current private GPU endpoint as the default. Keep it if you have access, or replace it with your own deployment's origin (without `/v1/route`). Existing `.env` files are never overwritten. The CLI loads `.env` from your current directory, while existing environment variables take precedence. This repository ignores `.env` in Git and excludes it from Docker builds.
+Install gcloud, sign in with `gcloud auth login`, and grant the account invoker access to that service. On a GCP workload use `LAYA_AUTH=google` for workload identity instead. Remote clients require HTTPS and keep Google authentication; unauthenticated HTTP is accepted only for literal loopback hosts. Local clients ignore proxy environment settings and send no Google token. Compose deliberately fixes its own CLI to the local container service, even if your host `.env` contains a cloud endpoint.
 
-For another file, put the global flag before the command:
+If using only the native client, install it with `uv sync --extra cli --python 3.12`. Use `uv run --no-sync tern doctor --live` to verify access. Cloud hosting and generation can incur charges. [Deployment guide](operations.md).
+
+## Synthetic offline preview
 
 ```sh
-uv run tern --env-file .env.staging doctor
+docker compose exec laya tern demo
+docker compose exec laya tern demo --all
+docker compose exec laya tern demo --json
 ```
 
-## 3. Check access
-
-Install the [Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install) and sign in to an account with `roles/run.invoker` on your Laya service:
-
-```sh
-gcloud auth login
-uv run tern doctor
-uv run tern doctor --live
-```
-
-The local doctor checks configuration without displaying credential values. `--live` validates the key using OpenRouter's [current-key endpoint](https://openrouter.ai/docs/api/api-reference/api-keys/get-current-key), resolves your selected models in the catalog, and checks private GPU readiness. It does not purchase an LLM completion, but waking the Cloud Run GPU can incur charges. A first startup may take about a minute.
-
-On a GCP workload with a service account, use `--auth google` instead of local `gcloud` authentication. The workload identity needs invoker access. Ordinary user ADC does not supply the production ID token used by this adapter. [Authentication details](adapter.md#integrate-in-an-application).
-
-## 4. Send a live prompt
-
-```sh
-uv run tern chat "Explain idempotency in two sentences."
-uv run tern chat "What is a cache?" --stream
-uv run tern chat "What is 17 times 23?" --json
-```
-
-This uses paid OpenRouter generation and the private GPU service. The CLI warms the GPU at startup; it is meant for interactive use, not a replacement for a long-lived application client. Production applications should reuse the Python adapter's clients.
-
-Shadow mode selects the strong model by default. An explicit experimental threshold enables economy selection for that request's workload:
-
-```sh
-uv run tern chat "Rewrite politely: send the report." --experimental-threshold 0.7
-uv run tern chat "Explain lock contention." --workload coding --experimental-threshold 0.7
-```
-
-The threshold is not calibrated. Capability checks and failure fallback still apply.
+These commands execute 100 fixture requests through the adapter using synthetic scores and answers. They do not call the running Laya model or OpenRouter. For this preview alone, Docker/model downloads are unnecessary: `uv run --extra cli tern demo` works on Windows, Linux and macOS. Both `TRUE_TAG` and `OUTPUT_TAG` are shown; fixture expectations are not measured ground truth.
 
 ## Run 100 live requests
 
 ```sh
-uv run tern demo --live --experimental-threshold 0.7
+docker compose exec laya tern demo --live --experimental-threshold 0.7
 ```
 
 This runs 100 real OpenRouter completions: 25 rewrites, 25 coding prompts, 25 tool-call requests, and 25 short summaries. All prompts are synthetic test inputs, but classifier scores and generation responses are real. No model scores, completions or outages are simulated. The weather tool calls are checked for their function name and city; the tools themselves are not executed.
 
-The 75 text requests are eligible for classification on your private GCP GPU. The 25 tool requests use the strong model directly. An explicit `0.7` threshold exercises both tiers; it is not calibrated. Without that flag, the adapter follows the deployed shadow policy and selects the strong model.
+The 75 text requests are eligible for classification by your configured Laya service. The 25 tool requests use the strong model directly. An explicit `0.7` threshold exercises both tiers; it is not calibrated. Without that flag, the adapter follows the deployed shadow policy and selects the strong model.
 
-Defaults are four concurrent generations, serialized GPU classification, a 750 ms classifier deadline, and 2,048 output tokens per provider attempt (including reasoning). You can change the generation limits and results path:
+Defaults are four concurrent generations, serialized classification, a 30-second local CPU deadline (750 ms for remote clients by default), and 2,048 output tokens per provider attempt (including reasoning). You can change the generation limits and results path:
 
 ```sh
-uv run tern demo --live --experimental-threshold 0.7 --max-tokens 2048 --concurrency 4 --output artifacts/my-live-run.json
+docker compose exec laya tern demo --live --experimental-threshold 0.7 --max-tokens 2048 --concurrency 4 --output artifacts/my-live-run.json
 ```
 
-Expect GCP and OpenRouter charges. A retryable economy error can cause one additional strong-model attempt. Each attempt has a 120-second generation deadline. The runner records failures and continues through the batch; it does not automatically replay a failed run.
+OpenRouter generations are paid; local classification has no API charge. GCP charges apply only if you choose cloud hosting. A retryable economy error can cause one additional strong-model attempt. Each attempt has a 120-second generation deadline. The runner records failures and continues through the batch; it does not automatically replay a failed run.
 
 Progress and a JSON checkpoint are written as requests finish. By default, each invocation creates a new timestamped file. An existing `--output` file is never overwritten. An interrupted request may have been billed even if no result was received, so do not assume pending/running rows are safe to replay.
 
@@ -110,10 +144,12 @@ Each progress row shows `ID`, `CATEGORY`, `TRUE_TAG`, `OUTPUT_TAG`, status, time
 View a saved run without making API calls or modifying its evidence:
 
 ```sh
-uv run tern results artifacts/live-100-openrouter.json
+docker compose exec laya tern results artifacts/my-live-run.json
 ```
 
 Older runs without reference labels show `unknown` under `TRUE_TAG`; labels are never invented from their predictions. New live runs and the offline demo include both tags.
+
+Docker stores reports in the persistent results volume at `/app/artifacts`. Copy them to the host with `docker compose cp laya:/app/artifacts ./local-results`. Native CLI runs write to your current directory.
 
 The report includes actual responses, routing decisions, raw successful classifier results, provider attempts, reported usage/cost, end-to-end latency, truncation flags, and basic tool-call validation. Costs exclude GCP and unknown charges on attempts that did not return usage. A completed response is a transport success, not proof of answer quality. Latency includes four-way generation concurrency; this is an integration run rather than a controlled performance benchmark.
 
@@ -121,38 +157,23 @@ The report includes actual responses, routing decisions, raw successful classifi
 
 See the [recorded 100-request run](live-results.md) for actual results, costs and limitations.
 
-## Useful switches
-
-| Switch | Default | Purpose |
-|---|---|---|
-| `--stream` | Off | Print output as it arrives; Ctrl+C closes the upstream stream |
-| `--json` | Off | Full completion, routing decision, attempts and usage as JSON; incompatible with `--stream` |
-| `--max-tokens` | `4096` | Output budget, including model reasoning |
-| `--input-tokens` | `8192` for short CLI prompts | Declare a conservative bound on input tokens across your models |
-| `--language` | `en` | Set the trusted prompt language; unsupported languages use the strong model |
-| `--workload` | `chat` | `chat`, `coding` or `business` |
-| `--auth` | `gcloud` | Use `google` for service-account credentials or GCP metadata |
-| `--experimental-threshold` | Unset | Explicit economy policy in `(0.5, 1]` |
-
-The convenience input budget only applies to a single text prompt of at most 4,096 UTF-8 bytes. Longer prompts require an explicit bound; it is not a universal tokenizer. For history, tools or multimodal input, use the [Python API](adapter.md) and account for the complete payload in your bound.
-
 ## Common fixes
 
 | Symptom | What to do |
 |---|---|
-| Repository not found | Sign in to GitHub with an account granted access to this private repo |
-| `tern` not found | Run it as `uv run tern …` after `uv sync --extra cli` |
-| Missing OpenRouter key | Add it to `.env` in the directory where you run the command |
-| Local doctor passes, live doctor fails | Verify the key, Google login and invoker permission; local checks do not authenticate |
-| Cold startup is slow | Allow startup to finish; the service scales to zero when idle |
-| Every request uses the strong model | Expected in shadow mode; economy requires an explicit experimental threshold |
-| `router_timeout` selects strong | The short classification deadline expired; conservative fallback worked |
-| Answer is cut off | Increase `--max-tokens`; reasoning consumes part of that budget |
-| A request is ineligible | Check capabilities, model allowlists and input/output budgets; do not silently truncate the prompt |
+| Docker daemon unavailable | Start Docker Desktop; on Windows use its Linux/WSL2 engine |
+| Setup is still waiting | Run `docker compose logs -f laya`; the first run downloads about 0.84 GB of weights and warms the model |
+| Port 8080 is occupied | Set `TERN_PORT=8081` in `.env`, rerun Compose, and use that port for host clients |
+| CPU routing times out | CPU inference can take tens of seconds. Prefer native Metal or supported NVIDIA hardware; adjust both the client deadline and server inference budget if needed |
+| No OpenRouter key | `route` still works; `chat` and `demo --live` need `OPENROUTER_API_KEY` |
+| Every selected tier is strong | Expected in shadow mode; inspect `proposed_tier` and `probability_economy`, or explicitly set an experimental threshold when generating answers |
+| Native client still calls GCP | Existing `.env`/shell settings take precedence. Change `LAYA_ENDPOINT` to `http://127.0.0.1:8080` and `LAYA_AUTH` to `auto` |
+| Answer is cut off | Increase `--max-tokens`; reasoning consumes part of the output budget |
+| Apple Silicon install fails | Use macOS 14+ and a native ARM64 Python, not Rosetta |
 
 ## Next steps
 
 - [Stream from Python](../examples/stream.py).
 - [Understand the adapter contract](adapter.md).
-- [Deploy your own GPU endpoint](operations.md#gpu-experiment).
+- [Deploy an optional GPU endpoint](operations.md#gpu-experiment).
 - [Measure quality before enabling economy routing](evaluation-data.md).

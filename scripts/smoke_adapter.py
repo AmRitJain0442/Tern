@@ -35,7 +35,8 @@ async def main(args):
     if len(assignments) != 2:
         raise SystemExit("Economy and strong model IDs must differ")
     endpoint, _, options = connection_settings()
-    options["timeout"] = args.router_timeout
+    if args.router_timeout is not None:
+        options["timeout"] = args.router_timeout
     result = {
         "kind": "synthetic_adapter_smoke_not_quality_evaluation",
         "created_at": datetime.now(timezone.utc).isoformat(),
@@ -173,5 +174,5 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output", type=Path, default=Path("artifacts/openrouter-adapter-smoke.json")
     )
-    parser.add_argument("--router-timeout", type=float, default=0.75)
+    parser.add_argument("--router-timeout", type=float, help="override local/remote default deadline")
     asyncio.run(main(parser.parse_args()))

@@ -10,7 +10,7 @@ def prepare_model():
     from huggingface_hub import snapshot_download
 
     path = Path(os.environ.get("MODEL_PATH", "/models/laya-mlx")) / MODEL_REVISION
-    # local_files_only avoids network on subsequent starts, but require all runtime files.
+    # A complete, revision-specific snapshot needs no network on subsequent starts.
     required = (
         "model.safetensors",
         "rl_agent_config.json",

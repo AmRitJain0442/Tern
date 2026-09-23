@@ -159,6 +159,7 @@ def test_model_download_resumes_and_cached_restart_needs_no_network(tmp_path, mo
 
     monkeypatch.setitem(sys.modules, "huggingface_hub", SimpleNamespace(snapshot_download=download))
     monkeypatch.setenv("MODEL_PATH", str(base))
+    monkeypatch.setenv("HF_HUB_OFFLINE", "0")
     with pytest.raises(OSError):
         prepare_model()
     assert not (base / MODEL_REVISION / ".tern-download-complete").exists()

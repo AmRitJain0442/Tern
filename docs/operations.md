@@ -4,6 +4,8 @@ The service returns routing decisions; it does not invoke downstream LLMs. Defau
 
 ## Reproduce locally
 
+For the complete local installation, use `docker compose up --build --wait`. This builds the runtime, downloads the pinned checkpoint into a reusable volume, and starts CPU inference without cloud credentials. The [quickstart](quickstart.md) covers native Apple Metal, an optional NVIDIA Compose override, and local CLI usage. The deployment commands below are for optional cloud hosting.
+
 ```powershell
 uv sync --extra dev --python 3.12
 uv run --no-sync pytest -q

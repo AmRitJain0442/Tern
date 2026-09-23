@@ -1,6 +1,6 @@
-# Laya GPU → OpenRouter adapter
+# Laya → OpenRouter adapter
 
-The Python adapter calls the existing private Cloud Run L4 service for a routing decision, maps its tier to a configured OpenRouter model, and returns a completion or an asynchronous stream. MLX inference stays on GCP; the calling application does not need MLX or a GPU installed.
+The Python adapter calls a local or hosted Laya service for a routing decision, maps its tier to a configured OpenRouter model, and returns a completion or asynchronous stream. Local Laya is the default. Start it with `docker compose up --build --wait`; the calling application does not need MLX installed. Cloud Run is optional.
 
 For a guided first run, use the [CLI quickstart](quickstart.md). A [runnable Python streaming example](../examples/stream.py) is also included.
 
@@ -9,7 +9,7 @@ For a guided first run, use the [CLI quickstart](quickstart.md). A [runnable Pyt
 ```powershell
 uv sync --extra dev --extra adapter --python 3.12
 # Put OPENROUTER_API_KEY in the ignored .env file; see .env.example.
-gcloud auth login
+# Start local Laya first: docker compose up --build --wait
 uv run --no-sync --env-file .env python scripts/smoke_adapter.py
 ```
 
@@ -44,7 +44,9 @@ async def answer():
 
 For an application server, create both clients and the adapter once in its startup lifespan, reuse them across requests, and close them on shutdown. `RoutingContext.input_tokens` must be a conservative upper bound across candidate tokenizers, including all messages, chat formatting, tool schemas and multimodal tokens. The example's bound applies only to that tiny fixed prompt. A character-count heuristic is not a general multimodal token estimator. Underestimating this value can result in a provider context-limit error; the adapter never truncates messages.
 
-`LayaGPUClient` uses audience-bound Google ID tokens from service-account credentials or GCP metadata. Grant the application's service account `roles/run.invoker` on `model-router-laya-gpu`; the audience is the service origin. Ordinary user ADC is not a substitute for this production identity. Local scripts explicitly use `GcloudIDTokenProvider`, with the logged-in account that already has invoker permission. Tokens are cached and concurrent refreshes coalesced; credentials and provider bodies are excluded from error messages.
+`LayaGPUClient()` defaults to `http://127.0.0.1:8080`, with no authentication and a 30-second deadline for CPU inference. Local mode accepts only HTTP loopback origins (`127.0.0.1`, `::1`, `localhost`), bypasses environment proxies, and rejects supplied Google token providers. It never follows redirects. To use environment configuration in Python, pass `connection_settings()` from `model_router.connection` to the client, as in the streaming example.
+
+For a remote HTTPS origin, `LayaGPUClient("https://your-service.run.app")` uses audience-bound Google ID tokens from service-account credentials or GCP metadata and a 750 ms default deadline. Grant the application's service account `roles/run.invoker` on that service. Ordinary user ADC is not a substitute for this production identity. The CLI selects `GcloudIDTokenProvider` for remote endpoints by default; use `--auth google` or `LAYA_AUTH=google` on GCP. Tokens are cached and refreshes coalesced; credential values are excluded from error messages.
 
 On GCP the OpenRouter credential should come from the application's secret environment, such as Secret Manager. The GPU decision service itself does not need the OpenRouter key. The local `.env` is ignored by Git and excluded from the container build context.
 
@@ -66,7 +68,7 @@ An eligible strong fallback is required. Candidate checks cover enabled status, 
 
 Unknown message roles and unsupported content-part types are rejected. The first version accepts text, image URLs and input audio, but does not expose every OpenRouter feature (for example files, video, plugins or provider-specific reasoning controls). “All workloads” means these workloads have a conservative route; it does not imply Laya has been validated for every task.
 
-The classifier deadline is **750 ms total**, including token acquisition and HTTP. Three consecutive failures open its circuit for 15 seconds. The startup warmup has a separate 90-second allowance. A cold classifier can therefore yield strong-model fallback until warm; min instances remains zero on GCP.
+The remote classifier deadline is **750 ms total**, including token acquisition and HTTP; local CPU clients default to **30 seconds**. The CLI accepts `LAYA_TIMEOUT` to override this. Three consecutive failures open the circuit for 15 seconds. Startup warmup has a separate 90-second allowance. A cold classifier can yield strong-model fallback until warm; the recorded GCP deployment uses minimum instances zero. The local CPU Compose service also raises its post-inference budget to 30 seconds.
 
 Nonstreaming generation has a 60-second total deadline per attempt by default. Streaming uses a 60-second HTTP inactivity timeout, not a total stream duration limit. Applications should enforce their own end-to-end cancellation deadline. OpenRouter may also perform provider retries within its own request. Adapter attempt counts do not describe those internal attempts.
 
