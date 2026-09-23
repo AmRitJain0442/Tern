@@ -64,6 +64,7 @@ def main():
                 "median_ms": statistics.median(s["e2e_ms"] for s in samples),
             }
         )
+        print(name, rows[-1]["median_ms"], "ms", flush=True)
     result = {
         "kind": "synthetic_latency_and_behavior_probe_not_quality_evaluation",
         "created_at": datetime.now(timezone.utc).isoformat(),

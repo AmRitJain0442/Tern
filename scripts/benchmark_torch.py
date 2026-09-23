@@ -44,6 +44,8 @@ model_path = snapshot_download(
     revision=revision,
     allow_patterns=["model.safetensors", "rl_agent_config.json", "encoder/*", "tokenizer/*"],
 )
+if "--download-only" in sys.argv:
+    raise SystemExit(0)
 start = perf_counter()
 agent = laya.load(model_path, device="cpu")
 load_ms = (perf_counter() - start) * 1000
