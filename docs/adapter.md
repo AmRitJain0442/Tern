@@ -2,6 +2,8 @@
 
 The Python adapter calls the existing private Cloud Run L4 service for a routing decision, maps its tier to a configured OpenRouter model, and returns a completion or an asynchronous stream. MLX inference stays on GCP; the calling application does not need MLX or a GPU installed.
 
+For a guided first run, use the [CLI quickstart](quickstart.md). A [runnable Python streaming example](../examples/stream.py) is also included.
+
 ## Run the live smoke test
 
 ```powershell

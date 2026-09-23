@@ -1,0 +1,10 @@
+$ uv run model-router doctor
+
+  MODEL ROUTER  /  choose the right model
+  SETUP CHECK  ·  credential values are never printed
+
+  OK   OpenRouter credential: present (value hidden)
+  OK   GPU endpoint: HTTPS origin configured
+  OK   Google authentication: gcloud available; run gcloud auth login
+
+  Local checks only. Run model-router doctor --live to verify access.
