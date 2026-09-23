@@ -19,7 +19,7 @@ class FakeBackend:
 
 def test_api_proposal_and_fallbacks():
     with TestClient(create_app(FakeBackend)) as client:
-        assert client.get("/healthz").json()["ready"]
+        assert client.get("/health").json()["ready"]
         for prompt, reason in [
             ("hi", "shadow_proposal"),
             ("overflow", "router_context_overflow"),

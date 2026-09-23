@@ -15,18 +15,19 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--endpoint", required=True)
 parser.add_argument("--output", type=Path, default=Path("artifacts/cloud-mlx-cpu.json"))
 parser.add_argument("--repeats", type=int, default=3)
+parser.add_argument("--health-path", default="/health")
 args = parser.parse_args()
 if args.repeats < 1:
     parser.error("repeats must be positive")
 token = subprocess.check_output(["gcloud.cmd", "auth", "print-identity-token"], text=True).strip()
 rows = []
 with httpx.Client(timeout=90) as client:
-    anonymous = client.get(args.endpoint + "/healthz")
+    anonymous = client.get(args.endpoint + args.health_path)
     if anonymous.status_code != 403:
         raise RuntimeError(f"Expected anonymous rejection, got {anonymous.status_code}")
     client.headers["Authorization"] = "Bearer " + token
     start = time.perf_counter()
-    health = client.get(args.endpoint + "/healthz")
+    health = client.get(args.endpoint + args.health_path)
     health.raise_for_status()
     first_health_ms = (time.perf_counter() - start) * 1000
     for name, prompt in CASES:

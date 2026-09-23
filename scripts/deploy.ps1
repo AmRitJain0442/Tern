@@ -19,6 +19,6 @@ gcloud run deploy $Service --project=$Project --region=$Region --image=$Image `
     --timeout=60 --cpu-throttling --no-cpu-boost --execution-environment=gen2 `
     --set-env-vars='ROUTER_MODE=shadow,MAX_INFERENCE_MS=2000' `
     --labels='app=model-router,purpose=research' `
-    --startup-probe='httpGet.path=/healthz,httpGet.port=8080,initialDelaySeconds=0,periodSeconds=10,timeoutSeconds=5,failureThreshold=24' `
+    --startup-probe='httpGet.path=/health,httpGet.port=8080,initialDelaySeconds=0,periodSeconds=10,timeoutSeconds=5,failureThreshold=24' `
     --quiet
 if ($LASTEXITCODE -ne 0) { throw 'Cloud Run deployment failed' }

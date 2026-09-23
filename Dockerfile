@@ -5,7 +5,8 @@ COPY --from=ghcr.io/astral-sh/uv:0.7.13 /uv /usr/local/bin/uv
 WORKDIR /app
 COPY pyproject.toml uv.lock README.md ./
 COPY src ./src
-RUN uv sync --frozen --extra mlx-cpu --no-dev --no-editable
+ARG MLX_EXTRA=mlx-cpu
+RUN uv sync --frozen --extra ${MLX_EXTRA} --no-dev --no-editable
 COPY scripts/download_model.py ./scripts/download_model.py
 ENV MODEL_PATH=/opt/laya-mlx
 RUN .venv/bin/python scripts/download_model.py

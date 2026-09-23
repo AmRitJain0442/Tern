@@ -1,5 +1,6 @@
 *
 !Dockerfile
+!cloudbuild-gpu.yaml
 !.dockerignore
 !pyproject.toml
 !uv.lock

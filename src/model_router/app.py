@@ -36,7 +36,7 @@ def create_app(backend_factory=MLXBackend, settings=None):
 
     app = FastAPI(title="Model Router Lab", lifespan=lifespan)
 
-    @app.get("/healthz")
+    @app.get("/health")
     def health():
         return {"ready": True, "mode": config.mode, "model_revision": app.state.backend.revision}
 
