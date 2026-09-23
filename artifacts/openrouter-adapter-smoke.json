@@ -1,0 +1,745 @@
+{
+  "kind": "synthetic_adapter_smoke_not_quality_evaluation",
+  "created_at": "2026-09-23T13:38:53.494976+00:00",
+  "endpoint": "https://model-router-laya-gpu-635367932686.asia-southeast1.run.app",
+  "experimental_threshold": 0.7,
+  "rows": [
+    {
+      "case": "shadow_completion",
+      "request": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Rewrite this politely: Send me the report today."
+          }
+        ],
+        "max_tokens": 1024
+      },
+      "routing": {
+        "model": "google/gemini-2.5-pro",
+        "tier": "strong",
+        "reason": "router_timeout",
+        "source": "fallback",
+        "workload": "chat",
+        "proposed_tier": null,
+        "probability_economy": null,
+        "service_mode": null,
+        "policy_version": null,
+        "experimental_threshold": null,
+        "router_ms": 761.7985999995653
+      },
+      "response": {
+        "id": "gen-1790170780-Y8AG0MUCPMa0WNpTnW5u",
+        "object": "chat.completion",
+        "created": 1790170780,
+        "model": "google/gemini-2.5-pro",
+        "provider": "Google",
+        "system_fingerprint": null,
+        "service_tier": "default",
+        "choices": [
+          {
+            "index": 0,
+            "logprobs": null,
+            "finish_reason": "length",
+            "native_finish_reason": "MAX_TOKENS",
+            "message": {
+              "role": "assistant",
+              "content": "Of course. Here are several polite ways to rewrite \"Send me the report today,\" ranging from casual to very formal.\n\n### **Short & Simple (Good for most situations)**\n*   Could you",
+              "refusal": null,
+              "reasoning": "**Refining Report Delivery**\n\nI'm currently focused on distilling the core request for the report and its deadline. My thinking is centering on how to convey this with varying degrees of politeness and urgency, exploring different phrasings to suit different contexts.\n\n**Prioritizing Key Information**\n\nMy current thoughts are revolving around identifying the absolute essentials of the request \u2013 the core deliverable and its timeframe. I'm refining how to communicate this concisely while also considering nuances of politeness and urgency.\n\n**Clarifying Information Delivery**\n\nMy current thinking is focused on refining the phrasing for requesting a report. I'm exploring options that convey the deadline with appropriate politeness and urgency, aiming for clarity without being overly demanding.\n\n**Gathering Key Details**\n\nI'm focusing on the core elements of the request: what needs to be delivered and by when. My thoughts are currently occupied with how to best phrase this information for clear and efficient communication with others.\n\n**Refining Communication Strategy**\n\nMy current thinking is focused on how to effectively convey the urgency and necessity of receiving the report by day's end, exploring variations in phrasing to ensure clarity and politeness, and considering the best way to frame these requests for optimal reception.\n\n",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "**Refining Report Delivery**\n\nI'm currently focused on distilling the core request for the report and its deadline. My thinking is centering on how to convey this with varying degrees of politeness and urgency, exploring different phrasings to suit different contexts.\n\n**Prioritizing Key Information**\n\nMy current thoughts are revolving around identifying the absolute essentials of the request \u2013 the core deliverable and its timeframe. I'm refining how to communicate this concisely while also considering nuances of politeness and urgency.\n\n**Clarifying Information Delivery**\n\nMy current thinking is focused on refining the phrasing for requesting a report. I'm exploring options that convey the deadline with appropriate politeness and urgency, aiming for clarity without being overly demanding.\n\n**Gathering Key Details**\n\nI'm focusing on the core elements of the request: what needs to be delivered and by when. My thoughts are currently occupied with how to best phrase this information for clear and efficient communication with others.\n\n**Refining Communication Strategy**\n\nMy current thinking is focused on how to effectively convey the urgency and necessity of receiving the report by day's end, exploring variations in phrasing to ensure clarity and politeness, and considering the best way to frame these requests for optimal reception.\n\n",
+                  "format": "google-gemini-v1",
+                  "index": 0
+                }
+              ]
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 1020,
+          "total_tokens": 1030,
+          "cost": 0.0102125,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0102125,
+            "upstream_inference_prompt_cost": 1.25e-05,
+            "upstream_inference_completions_cost": 0.0102
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 979,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      },
+      "attempted_models": [
+        "google/gemini-2.5-pro"
+      ],
+      "usage": {
+        "prompt_tokens": 10,
+        "completion_tokens": 1020,
+        "total_tokens": 1030,
+        "cost": 0.0102125,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0102125,
+          "upstream_inference_prompt_cost": 1.25e-05,
+          "upstream_inference_completions_cost": 0.0102
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 979,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "nonempty_output": true,
+      "elapsed_ms": 14202.443600000151
+    },
+    {
+      "case": "experimental_stream",
+      "request": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Rewrite this politely: Send me the report today."
+          }
+        ],
+        "max_tokens": 1024
+      },
+      "first_chunk_ms": 916.0298000006151,
+      "routing": {
+        "model": "google/gemini-2.5-flash-lite",
+        "tier": "economy",
+        "reason": "adapter_experimental_threshold",
+        "source": "laya",
+        "workload": "chat",
+        "proposed_tier": "strong",
+        "probability_economy": 0.7487,
+        "service_mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "experimental_threshold": 0.7,
+        "router_ms": 263.54189999983646
+      },
+      "attempted_models": [
+        "google/gemini-2.5-flash-lite"
+      ],
+      "chunks": [
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "Here",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " are several polite ways to",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " ask for the report today, ranging in directness:\n\n**More Direct,",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " but still polite:**\n\n*   \"Could you please send me the report today?\"\n",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "*   \"Would it be possible for you to send me the report today?\"\n*   \"I would appreciate it if you could send me the report today",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": ".\"\n\n**Slightly softer, implying a need or request:**\n\n*   \"Could I get the report today, please?\"\n*   \"When",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " you have a moment, could you send over the report today?\"\n*   \"I'm hoping to receive the report today, if that's feasible.\"\n\n**If you need it by a specific time or have a reason:**\n\n*   ",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "\"Would you be able to send me the report by the end of the day today?\"\n*   \"I need to review the report today, so if you could send it over when you get a chance, that would be great.\"\n*   \"",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "To help me prepare for [meeting/task], could you please send me the report today?\"\n\n**Very gentle and collaborative:**\n\n*   \"Just a friendly reminder about the report. Would it be possible to get it today?\"\n*   \"Checking in on the report. If it's ready, I'd be grateful",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " if you could send it over today.\"\n\n**The best option depends on your relationship with the recipient and the context.** Consider which of these feels most natural and appropriate for your situation.",
+                "role": "assistant"
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "",
+                "role": "assistant"
+              },
+              "finish_reason": "stop",
+              "native_finish_reason": "STOP"
+            }
+          ]
+        },
+        {
+          "id": "gen-1790170794-4fZ3W3uRLgQG2KyrMP1O",
+          "object": "chat.completion.chunk",
+          "created": 1790170794,
+          "model": "google/gemini-2.5-flash-lite",
+          "provider": "Google",
+          "service_tier": "default",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "",
+                "role": "assistant"
+              },
+              "finish_reason": "stop",
+              "native_finish_reason": "STOP"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 10,
+            "completion_tokens": 312,
+            "total_tokens": 322,
+            "cost": 0.0001258,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0001258,
+              "upstream_inference_prompt_cost": 1e-06,
+              "upstream_inference_completions_cost": 0.0001248
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ],
+      "nonempty_output": true,
+      "usage": {
+        "prompt_tokens": 10,
+        "completion_tokens": 312,
+        "total_tokens": 322,
+        "cost": 0.0001258,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0001258,
+          "upstream_inference_prompt_cost": 1e-06,
+          "upstream_inference_completions_cost": 0.0001248
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "elapsed_ms": 1948.6692000000403
+    },
+    {
+      "case": "experimental_coding",
+      "request": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "In Python, write a thread-safe bounded LRU cache. Explain how you prevent races between lookup, eviction and updates. Keep the answer concise."
+          }
+        ],
+        "max_tokens": 1024
+      },
+      "routing": {
+        "model": "google/gemini-2.5-pro",
+        "tier": "strong",
+        "reason": "adapter_experimental_threshold",
+        "source": "laya",
+        "workload": "coding",
+        "proposed_tier": "strong",
+        "probability_economy": 0.48,
+        "service_mode": "shadow",
+        "policy_version": "binary-shadow-v1",
+        "experimental_threshold": 0.7,
+        "router_ms": 254.22799999978452
+      },
+      "response": {
+        "id": "gen-1790170796-Aq412uiXtXgiN8DjQzLU",
+        "object": "chat.completion",
+        "created": 1790170796,
+        "model": "google/gemini-2.5-pro",
+        "provider": "Google",
+        "system_fingerprint": null,
+        "service_tier": "default",
+        "choices": [
+          {
+            "index": 0,
+            "logprobs": null,
+            "finish_reason": "length",
+            "native_finish_reason": "MAX_TOKENS",
+            "message": {
+              "role": "assistant",
+              "content": "Here is a thread-safe, bounded LRU cache in Python, with an explanation of its concurrency control.\n\n### The Code\n\nWe use `collections.OrderedDict` to build the cache, as",
+              "refusal": null,
+              "reasoning": "**Developing LRU Cache Logic**\n\nI'm currently refining the core mechanics of the LRU cache. My focus is on efficiently tracking usage to ensure the least recently accessed items are correctly identified for eviction when the cache reaches its capacity.\n\n**Implementing LRU Cache**\n\nI'm focusing on the core logic, specifically how to combine a dictionary for O(1) lookups with a doubly linked list to efficiently manage the recency order of items. This allows for quick identification and eviction of the least recently used elements when the cache capacity is reached.\n\n**Refining LRU Cache**\n\nI'm now focusing on integrating thread safety. My current thoughts revolve around using locks to protect shared data structures during concurrent read and write operations, ensuring atomic updates to the cache's state.\n\n**Updating Cache Logic**\n\nI am currently focusing on the implementation details of the LRU cache, specifically how to leverage `collections.OrderedDict` for its inherent ordering and the `move_to_end` functionality to manage the recency of items efficiently. This approach aims to simplify the core LRU logic.\n\n",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "**Developing LRU Cache Logic**\n\nI'm currently refining the core mechanics of the LRU cache. My focus is on efficiently tracking usage to ensure the least recently accessed items are correctly identified for eviction when the cache reaches its capacity.\n\n**Implementing LRU Cache**\n\nI'm focusing on the core logic, specifically how to combine a dictionary for O(1) lookups with a doubly linked list to efficiently manage the recency order of items. This allows for quick identification and eviction of the least recently used elements when the cache capacity is reached.\n\n**Refining LRU Cache**\n\nI'm now focusing on integrating thread safety. My current thoughts revolve around using locks to protect shared data structures during concurrent read and write operations, ensuring atomic updates to the cache's state.\n\n**Updating Cache Logic**\n\nI am currently focusing on the implementation details of the LRU cache, specifically how to leverage `collections.OrderedDict` for its inherent ordering and the `move_to_end` functionality to manage the recency of items efficiently. This approach aims to simplify the core LRU logic.\n\n",
+                  "format": "google-gemini-v1",
+                  "index": 0
+                }
+              ]
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 30,
+          "completion_tokens": 1020,
+          "total_tokens": 1050,
+          "cost": 0.0102375,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0102375,
+            "upstream_inference_prompt_cost": 3.75e-05,
+            "upstream_inference_completions_cost": 0.0102
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 979,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      },
+      "attempted_models": [
+        "google/gemini-2.5-pro"
+      ],
+      "usage": {
+        "prompt_tokens": 30,
+        "completion_tokens": 1020,
+        "total_tokens": 1050,
+        "cost": 0.0102375,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0102375,
+          "upstream_inference_prompt_cost": 3.75e-05,
+          "upstream_inference_completions_cost": 0.0102
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 979,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "nonempty_output": true,
+      "elapsed_ms": 11775.374200000442
+    },
+    {
+      "case": "tool_bypass",
+      "request": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Get the weather in Paris using the provided tool."
+          }
+        ],
+        "max_tokens": 1024,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get city weather",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "function",
+          "function": {
+            "name": "get_weather"
+          }
+        }
+      },
+      "routing": {
+        "model": "google/gemini-2.5-pro",
+        "tier": "strong",
+        "reason": "capability_or_risk_constraint",
+        "source": "local",
+        "workload": "business",
+        "proposed_tier": null,
+        "probability_economy": null,
+        "service_mode": null,
+        "policy_version": null,
+        "experimental_threshold": null,
+        "router_ms": 0.05300000066199573
+      },
+      "response": {
+        "id": "gen-1790170807-szQ7dxpAkOEutBki3SIR",
+        "object": "chat.completion",
+        "created": 1790170807,
+        "model": "google/gemini-2.5-pro",
+        "provider": "Google AI Studio",
+        "system_fingerprint": null,
+        "service_tier": "default",
+        "choices": [
+          {
+            "index": 0,
+            "logprobs": null,
+            "finish_reason": "tool_calls",
+            "native_finish_reason": "STOP",
+            "message": {
+              "role": "assistant",
+              "content": null,
+              "refusal": null,
+              "reasoning": "**Determining Weather Query**\n\nI've determined the user's request is a weather inquiry for Paris. Utilizing the \"get_weather\" tool is the correct approach. I've extracted \"Paris\" as the necessary city parameter for the tool's input. The next step is to initiate the tool call.\n\n\n**Confirming Paris Weather Data**\n\nI've confirmed the intention of the request is to get weather information for Paris. The \"get_weather\" tool is selected, and I'm ready to proceed. I'm preparing to call the tool with the city set to \"Paris\" to retrieve the required data. This action is the next step in fulfilling the weather request.\n\n\n",
+              "tool_calls": [
+                {
+                  "type": "function",
+                  "index": 0,
+                  "id": "tool_get_weather_67juTZKXMitFJggh7YHK",
+                  "function": {
+                    "name": "get_weather",
+                    "arguments": "{\"city\":\"Paris\"}"
+                  }
+                }
+              ],
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "**Determining Weather Query**\n\nI've determined the user's request is a weather inquiry for Paris. Utilizing the \"get_weather\" tool is the correct approach. I've extracted \"Paris\" as the necessary city parameter for the tool's input. The next step is to initiate the tool call.\n\n\n**Confirming Paris Weather Data**\n\nI've confirmed the intention of the request is to get weather information for Paris. The \"get_weather\" tool is selected, and I'm ready to proceed. I'm preparing to call the tool with the city set to \"Paris\" to retrieve the required data. This action is the next step in fulfilling the weather request.\n\n\n",
+                  "format": "google-gemini-v1",
+                  "index": 0
+                },
+                {
+                  "type": "reasoning.encrypted",
+                  "data": "CiQBaRR9Ex5WsjPHkbyY6slD2UqWmChzGQS1SLm1MT4eUQPcEZMKbQFpFH0TOIYsmDVQsAkJNSoo/X8wcgBd52DKEOQ1pORt81SKQ444QJClMR+vtBW0c+x8WebUq9aFftE+TwCSuob5oai0iq8gu632nexJ3g2l9Y28RAJchITU8fF07CUGGij6kEm6S9u26i9iAHgKggEBaRR9E2//P0HmF63sNVfkNpdmHBDh4Xi6Bfcm3LEVlMMaZVqYvySUOchJTi2858QjLCNozmOvDMDRs0irLLMuXPtJ7I4WwgIKcU7oOdtr4QNHIZRY76nfxpP+oaCF/FLjg1RmYOzGtuMo8nGiNA318pLSBFDynzqjHJR2vRz+EmRWCoQBAWkUfRNP3UjA7GteshI0ipML+4HbUdAMEdXrB38jDVM+wtk9uLMn9jV2KZrMrH8ANHWgsQmbKAzt71FkDDKu/aApHnS8k7TauHodPZMGVSSA4iAtmAGKn/nO9/XNAjhC0IcNJP2FEi+i6R/8TXZf0MQT64GUeyP/taOzc7amn5rHVF+vCooBAWkUfRPRcs++jcE6Gv7qtkYKLF8gNxMhAB/ArVY59qXD87c5O1lGXnioHdKficGn+uDIEst2FTxhngAFi5HUey2WjaLgpSCdTq4+6l3CUuq1pR/YCcYcTGjZQwwGuoCoO7bV3N30B44bGVFyBb1dDYPF9iYKQFedn4qTr7Jw+CxQ99ihJOX31TTTCngBaRR9E3GYMDp3gtq9kqQ8c4UtHUHkw3WS3lDkh8Opcq7bbnPWEZqJtVvlmp8lW05hvfL0pFrDcFPjXNgkDhaeIdkpc4cRMIfU3ZxVtW73/+9aia/DCs+ZaSQyjxSaBmf00V6yJH5cmxiEW/Z7vwOeaBIuQHaUDgoKewFpFH0Tco0oNboJoklFkZoJ1wn6UK7AmwUYoWtq+JXa+ukhwZWr9dtTYWNZs5z9upUY5pLGIlSuZ1FJWinne5TBGa1zeqs3vVUzTJndV408kXLGGTMStFwA1GoXohXDeWoVHhIlnNDMdP/we4565LCW10QE5sZjCWbF9QojAWkUfRMr4QBUF0xVrvxJ4Yo/AbknmSgDSYc9YilQWM10xnE=",
+                  "format": "google-gemini-v1",
+                  "id": "tool_get_weather_67juTZKXMitFJggh7YHK",
+                  "index": 1
+                }
+              ]
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 46,
+          "completion_tokens": 159,
+          "total_tokens": 205,
+          "cost": 0.0016475,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0016475,
+            "upstream_inference_prompt_cost": 5.75e-05,
+            "upstream_inference_completions_cost": 0.00159
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 146,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      },
+      "attempted_models": [
+        "google/gemini-2.5-pro"
+      ],
+      "usage": {
+        "prompt_tokens": 46,
+        "completion_tokens": 159,
+        "total_tokens": 205,
+        "cost": 0.0016475,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0016475,
+          "upstream_inference_prompt_cost": 5.75e-05,
+          "upstream_inference_completions_cost": 0.00159
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 146,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "nonempty_output": true,
+      "tool_call_received": true,
+      "elapsed_ms": 13832.596199999898
+    }
+  ],
+  "health": {
+    "ready": true,
+    "mode": "shadow",
+    "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+  },
+  "warmup_ms": 44395.93210000021,
+  "models": [
+    {
+      "id": "google/gemini-2.5-flash-lite",
+      "tier": "economy",
+      "context_length": 1048576,
+      "max_output_tokens": 65535,
+      "input_modalities": [
+        "file",
+        "video",
+        "audio",
+        "image",
+        "text"
+      ],
+      "supported_parameters": [
+        "include_reasoning",
+        "stop",
+        "tool_choice",
+        "response_format",
+        "reasoning",
+        "tools",
+        "temperature",
+        "structured_outputs",
+        "max_tokens",
+        "top_p",
+        "seed"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "google/gemini-2.5-pro",
+      "tier": "strong",
+      "context_length": 1048576,
+      "max_output_tokens": 65536,
+      "input_modalities": [
+        "file",
+        "video",
+        "audio",
+        "image",
+        "text"
+      ],
+      "supported_parameters": [
+        "include_reasoning",
+        "stop",
+        "tool_choice",
+        "response_format",
+        "reasoning",
+        "tools",
+        "temperature",
+        "structured_outputs",
+        "max_tokens",
+        "top_p",
+        "seed"
+      ],
+      "enabled": true
+    }
+  ],
+  "raw_gpu_probe": {
+    "selected_tier": "strong",
+    "proposed_tier": "strong",
+    "reason": "shadow_proposal",
+    "mode": "shadow",
+    "policy_version": "binary-shadow-v1",
+    "probability_economy": 0.7487,
+    "inference_ms": 12.255943000013758,
+    "router_ms": 12.482,
+    "input_tokens": 62,
+    "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+  },
+  "probe_created_at": "2026-09-23T13:41:22.146340+00:00"
+}

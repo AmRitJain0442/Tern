@@ -2,7 +2,7 @@
 
 Research and a private GCP prototype using **`aac6fef/laya-mlx`** to propose LLM routes. Covers general chat/API, coding/agents, and business workflows.
 
-**Recommendation:** use Laya inside a policy calibrated against real downstream outcomes. Keep capability checks deterministic, begin with two tiers, and retain a conservative fallback. The current service runs in shadow mode and does not invoke paid downstream LLMs.
+**Recommendation:** use Laya inside a policy calibrated against real downstream outcomes. Keep capability checks deterministic, begin with two tiers, and retain a conservative fallback. The GPU decision service runs in shadow mode. The [Python OpenRouter adapter](docs/adapter.md) now dispatches real completions and streams, with explicit experimental thresholds for testing economy routing.
 
 ## What we measured
 
@@ -39,7 +39,7 @@ The GPU bills while allocated, including warm idle time. Scaling to zero is not 
 ## Development
 
 ```powershell
-uv sync --extra dev --python 3.12
+uv sync --extra dev --extra adapter --python 3.12
 uv run --no-sync pytest -q
 uv run --no-sync ruff check src tests scripts
 ```
