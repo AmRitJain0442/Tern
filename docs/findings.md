@@ -8,7 +8,13 @@ The exact `aac6fef/laya-mlx` checkpoint runs on Linux using MLX 0.32.2 CPU float
 
 The initial Cloud Run service uses 2 vCPU, 4 GiB, concurrency one, and CPU float32. Six sequential HTTP requests had a 26.45-second client median. This is one sample per case, not a tail-latency estimate or capacity test. Authenticated invocation succeeded; anonymous access to `/openapi.json` returned 403. Language, capability, and context-overflow fallback probes passed. All six model calls exceeded the experimental 2-second inference budget. [Cloud samples](../artifacts/cloud-mlx-cpu.json).
 
-This is enough to reject **this MLX CPU configuration** for interactive pre-dispatch routing. It does not show that all CPU runtimes are slow. An upstream PyTorch comparison and an L4 CUDA experiment follow.
+This is enough to reject **this MLX CPU configuration** for interactive pre-dispatch routing. It does not show that all CPU runtimes are slow.
+
+## PyTorch CPU reference
+
+The same six prompts and question schema were run sequentially after the MLX benchmark, on the same WSL host, using upstream Laya at `010bacef009c855ccba814b51f7c8e1d38ab5e3f`, PyTorch 2.14 CPU float32, two intra-op threads, and the source checkpoint revision recorded by the MLX port. Five samples per case followed three warmups. Per-case medians were 643–704 ms, approximately 32–38 times faster than the tested MLX CPU path. All six displayed economy probabilities matched to four decimals. This is a small fixture parity check, not general numerical validation. The model-loading timer excludes the download in this script. [Raw PyTorch samples](../artifacts/local-torch-cpu.json).
+
+The two runtimes can therefore agree on these outputs while performing very differently. Prefer measured target-hardware performance over the name of the framework. This CPU result is local, not a Cloud Run PyTorch measurement; the GPU experiment still needs its own timings.
 
 ## Question and probability behavior
 

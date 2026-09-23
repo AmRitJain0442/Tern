@@ -55,3 +55,26 @@ gcloud run services delete model-router-laya --project=tribe-v2-host --region=as
 ```
 
 This leaves images and build artifacts. Inspect the dedicated `model-router` Artifact Registry repository and the specific Cloud Build source objects before deleting them. Do not delete the shared project's buckets or other services. To roll back, move service traffic to the previously verified revision using `gcloud run services update-traffic`.
+
+## GPU experiment
+
+The user explicitly authorized GPU use. The L4 configuration uses Singapore, 4 vCPU, 16 GiB, one GPU, one instance maximum, minimum zero, and instance-based billing. Its runtime is MLX CUDA 12, float16. Run:
+
+```powershell
+$revision = git rev-parse --short HEAD
+$image = "asia-south1-docker.pkg.dev/tribe-v2-host/model-router/laya-gpu:$revision"
+gcloud builds submit . --project=tribe-v2-host --config=cloudbuild-gpu.yaml --substitutions="_IMAGE=$image"
+./scripts/deploy-gpu.ps1 -Image $image
+```
+
+Resolve the image tag to its digest for the recorded deployment. The runtime service account must already exist (the CPU deployment script creates it). The active deployer may invoke if it has the relevant project role; grant `roles/run.invoker` on this service to additional approved callers individually. Do not grant `allUsers`.
+
+Readiness is `/health`. `/healthz` was intercepted by the Cloud Run frontend in the CPU experiment and should not be used for an external reachability check.
+
+```powershell
+uv run --no-sync python scripts/benchmark_cloud.py --endpoint <service-url> --repeats 10 --output artifacts/cloud-mlx-gpu.json
+```
+
+The GPU service can scale to zero but bills while an instance remains allocated. Idle scale-down is not immediate. Delete this experiment's GPU service with `gcloud run services delete model-router-laya-gpu --project=tribe-v2-host --region=asia-southeast1` when no longer needed.
+
+The image registry used by this first experiment is in Mumbai; for sustained Singapore hosting, place the registry in Singapore too and measure cold starts again.
