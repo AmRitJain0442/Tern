@@ -103,6 +103,18 @@ Expect GCP and OpenRouter charges. A retryable economy error can cause one addit
 
 Progress and a JSON checkpoint are written as requests finish. By default, each invocation creates a new timestamped file. An existing `--output` file is never overwritten. An interrupted request may have been billed even if no result was received, so do not assume pending/running rows are safe to replay.
 
+Each progress row shows `ID`, `CATEGORY`, `TRUE_TAG`, `OUTPUT_TAG`, status, time, and cumulative reported cost. `TRUE_TAG` is a **declared fixture expectation**, not measured ground truth: rewrites and summaries expect `economy`; coding and tool requests expect `strong`. These assumptions are set before inference and never copied from predictions. The offline outage scenario expects `strong`. JSON records their provenance as `true_tag_source: "fixture_expectation"`.
+
+`OUTPUT_TAG` is the adapter's final selected tier, including capability bypasses and provider fallbacks, rather than the raw classifier proposal. On a failed provider request it identifies the last attempted tier when known. A mismatch is a disagreement with the fixture expectation, **not evidence of incorrect answer quality**. Raw classifier scores and routing reasons remain in the report.
+
+View a saved run without making API calls or modifying its evidence:
+
+```sh
+uv run tern results artifacts/live-100-openrouter.json
+```
+
+Older runs without reference labels show `unknown` under `TRUE_TAG`; labels are never invented from their predictions. New live runs and the offline demo include both tags.
+
 The report includes actual responses, routing decisions, raw successful classifier results, provider attempts, reported usage/cost, end-to-end latency, truncation flags, and basic tool-call validation. Costs exclude GCP and unknown charges on attempts that did not return usage. A completed response is a transport success, not proof of answer quality. Latency includes four-way generation concurrency; this is an integration run rather than a controlled performance benchmark.
 
 `--json` prints the complete report to stdout and progress to stderr. `--all` controls the offline view; live mode always prints a line for each finished request and saves every response in the report.

@@ -3,15 +3,20 @@ $ uv run tern demo
   TERN  /  small router. clear decisions.
   OFFLINE DEMO  ·  real adapter, synthetic responses
 
-  SCENARIO                 COUNT    ROUTE      WHY
-  Polite rewrites             25    ECONOMY    0.82 >= 0.70 threshold
-  Coding tasks                25    STRONG     0.41 < 0.70 threshold
-  Weather tool requests       25    STRONG     tool capability required
-  Classifier outages          25    STRONG     classifier unavailable
+  SCENARIO               COUNT    TRUE_TAG    OUTPUT_TAG    WHY
+  Polite rewrites           25    ECONOMY     ECONOMY       0.82 >= 0.70
+                                                            threshold
+  Coding tasks              25    STRONG      STRONG        0.41 < 0.70
+                                                            threshold
+  Weather tool              25    STRONG      STRONG        tool capability
+  requests                                                  required
+  Classifier outages        25    STRONG      STRONG        classifier
+                                                            unavailable
 
   100 requests completed  25 economy  75 strong
   No API key  ·  no GPU  ·  no network
   Illustrative scores. Live routing defaults to the strong model.
+  TRUE_TAG: fixture expectation, not measured ground truth.
   Every request: tern demo --all  JSON: tern demo --json
 
   Next  tern init  then  tern doctor
