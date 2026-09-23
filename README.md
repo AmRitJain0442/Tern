@@ -58,6 +58,16 @@ uv run tern chat "Explain idempotency in two sentences." --stream
 
 The CLI reads `.env` automatically. Live use needs an OpenRouter key and Cloud Run invoker access to the configured Laya service. The default endpoint is private; use your own `LAYA_ENDPOINT` if you are deploying separately. `doctor --live` checks access and wakes the GPU without buying an LLM completion. Live GPU use and `chat` can incur charges.
 
+**Run 100 real requests** after setup:
+
+```sh
+uv run tern demo --live --experimental-threshold 0.7
+```
+
+This makes paid OpenRouter calls using real GPU decisions for eligible text prompts. It covers 25 rewrites, 25 coding tasks, 25 tool-call requests, and 25 summaries, and saves every response and routing decision to a timestamped JSON file in `artifacts/`. Tool requests bypass classification; returned tool calls are validated but not executed. Output is capped at 2,048 tokens per attempt, with four concurrent generations. Omit the experimental threshold to follow the service's shadow policy. [Live-run details →](docs/quickstart.md#run-100-live-requests)
+
+[Recorded live run](docs/live-results.md): **100/100 completions**, 65 Flash Lite / 35 Pro, **$0.1965** reported OpenRouter cost excluding GCP; three classifier fallbacks and one truncated answer.
+
 ![Actual setup checker output showing a hidden credential value, configured HTTPS endpoint and local Google authentication check](docs/assets/terminal-doctor.png)
 
 <sub>The screenshot shows local checks. Add `--live` to verify the key, model catalog and GPU readiness. [Text transcript](docs/assets/terminal-doctor.txt).</sub>

@@ -83,6 +83,32 @@ uv run tern chat "Explain lock contention." --workload coding --experimental-thr
 
 The threshold is not calibrated. Capability checks and failure fallback still apply.
 
+## Run 100 live requests
+
+```sh
+uv run tern demo --live --experimental-threshold 0.7
+```
+
+This runs 100 real OpenRouter completions: 25 rewrites, 25 coding prompts, 25 tool-call requests, and 25 short summaries. All prompts are synthetic test inputs, but classifier scores and generation responses are real. No model scores, completions or outages are simulated. The weather tool calls are checked for their function name and city; the tools themselves are not executed.
+
+The 75 text requests are eligible for classification on your private GCP GPU. The 25 tool requests use the strong model directly. An explicit `0.7` threshold exercises both tiers; it is not calibrated. Without that flag, the adapter follows the deployed shadow policy and selects the strong model.
+
+Defaults are four concurrent generations, serialized GPU classification, a 750 ms classifier deadline, and 2,048 output tokens per provider attempt (including reasoning). You can change the generation limits and results path:
+
+```sh
+uv run tern demo --live --experimental-threshold 0.7 --max-tokens 2048 --concurrency 4 --output artifacts/my-live-run.json
+```
+
+Expect GCP and OpenRouter charges. A retryable economy error can cause one additional strong-model attempt. Each attempt has a 120-second generation deadline. The runner records failures and continues through the batch; it does not automatically replay a failed run.
+
+Progress and a JSON checkpoint are written as requests finish. By default, each invocation creates a new timestamped file. An existing `--output` file is never overwritten. An interrupted request may have been billed even if no result was received, so do not assume pending/running rows are safe to replay.
+
+The report includes actual responses, routing decisions, raw successful classifier results, provider attempts, reported usage/cost, end-to-end latency, truncation flags, and basic tool-call validation. Costs exclude GCP and unknown charges on attempts that did not return usage. A completed response is a transport success, not proof of answer quality. Latency includes four-way generation concurrency; this is an integration run rather than a controlled performance benchmark.
+
+`--json` prints the complete report to stdout and progress to stderr. `--all` controls the offline view; live mode always prints a line for each finished request and saves every response in the report.
+
+See the [recorded 100-request run](live-results.md) for actual results, costs and limitations.
+
 ## Useful switches
 
 | Switch | Default | Purpose |
