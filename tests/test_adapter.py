@@ -302,6 +302,124 @@ def test_shared_refresh_survives_caller_cancellation():
     asyncio.run(run())
 
 
+def test_google_token_audience_refresh_and_cache(monkeypatch):
+    from google.oauth2 import id_token
+
+    class Credentials:
+        valid = False
+        token = None
+
+        def refresh(self, request):
+            self.valid, self.token = True, "cached-test-token"
+
+    credentials = Credentials()
+    audiences = []
+
+    def fetch(audience, request):
+        audiences.append(audience)
+        return credentials
+
+    monkeypatch.setattr(id_token, "fetch_id_token_credentials", fetch)
+
+    async def run():
+        provider = GoogleIDTokenProvider("https://private.example")
+        assert await provider() == "cached-test-token"
+        assert await provider() == "cached-test-token"
+        assert audiences == ["https://private.example"]
+
+    asyncio.run(run())
+
+
+def test_catalog_resolution_and_parameter_eligibility():
+    def catalog(_):
+        return httpx.Response(
+            200,
+            json={
+                "data": [
+                    {
+                        "id": tier,
+                        "context_length": 8192,
+                        "top_provider": {"context_length": 4096, "max_completion_tokens": 512},
+                        "architecture": {"input_modalities": ["text"]},
+                        "supported_parameters": ["max_tokens"],
+                    }
+                    for tier in ("economy", "strong")
+                ]
+            },
+        )
+
+    async def run():
+        async with OpenRouterClient("test", transport=httpx.MockTransport(catalog)) as api:
+            specs = await api.models({"economy": "economy", "strong": "strong"})
+            assert specs[0].context_length == 4096
+            assert specs[0].max_output_tokens == 512
+            with pytest.raises(ValueError, match="absent"):
+                await api.models({"missing": "strong"})
+        async with setup(models=specs) as (adapter, calls):
+            with pytest.raises(NoEligibleModel):
+                await adapter.complete(REQUEST.model_copy(update={"temperature": 0.5}), CONTEXT)
+            with pytest.raises(NoEligibleModel):
+                await adapter.complete(REQUEST.model_copy(update={"max_tokens": 513}), CONTEXT)
+            assert not calls
+
+    asyncio.run(run())
+
+
+def test_request_snapshot_survives_caller_mutation():
+    async def run():
+        request = REQUEST.model_copy(deep=True)
+        async with setup() as (adapter, calls):
+            original = adapter.laya.token_provider
+
+            async def token():
+                request.messages[0]["content"] = "changed after eligibility"
+                return await original()
+
+            adapter.laya.token_provider = token
+            await adapter.complete(request, CONTEXT)
+            assert calls[1][1]["messages"] == REQUEST.messages
+
+    asyncio.run(run())
+
+
+def test_redirect_does_not_forward_identity_token():
+    async def run():
+        seen = []
+
+        def handler(request):
+            seen.append(str(request.url))
+            return httpx.Response(302, headers={"location": "https://different.example/route"})
+
+        async def token():
+            return "test-token"
+
+        async with LayaGPUClient(
+            token_provider=token, transport=httpx.MockTransport(handler)
+        ) as laya:
+            with pytest.raises(DecisionUnavailable, match="router_http_302"):
+                await laya.decide(RouteRequest(prompt="hello"))
+        assert len(seen) == 1
+
+    asyncio.run(run())
+
+
+def test_sse_multiline_data():
+    stream = ByteStream(
+        'data: {"choices":\n' + 'data: [{"delta":{"content":"hi"}}]}\n\n' + "data: [DONE]\n\n"
+    )
+
+    async def run():
+        async with setup(
+            lambda _: httpx.Response(
+                200, headers={"content-type": "text/event-stream"}, stream=stream
+            )
+        ) as (a, _):
+            chunks = [c async for c in a.stream(REQUEST, CONTEXT)]
+            assert chunks[0].chunk["choices"][0]["delta"]["content"] == "hi"
+
+    asyncio.run(run())
+
+
 class ByteStream(httpx.AsyncByteStream):
     def __init__(self, data):
         self.data, self.closed = data.encode(), False

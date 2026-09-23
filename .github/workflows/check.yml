@@ -10,6 +10,6 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           version: '0.7.13'
-      - run: uv sync --frozen --extra dev --python 3.12
+      - run: uv sync --frozen --extra dev --extra adapter --python 3.12
       - run: uv run --no-sync ruff check src tests scripts
       - run: uv run --no-sync pytest -q
