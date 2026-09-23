@@ -20,8 +20,9 @@ class RouteRequest(BaseModel):
     requires_private_processing: bool = False
     high_stakes: bool = False
     has_conversation_history: bool = False
-    eligible_tiers: list[Tier] = Field(default_factory=lambda: ["economy", "strong"],
-                                       min_length=1, max_length=2)
+    eligible_tiers: list[Tier] = Field(
+        default_factory=lambda: ["economy", "strong"], min_length=1, max_length=2
+    )
 
 
 class RouteResponse(BaseModel):
@@ -55,8 +56,7 @@ class Settings:
 def conservative(request: RouteRequest, settings: Settings, reason: str) -> RouteResponse:
     # Never silently violate eligibility if the conservative tier is unavailable.
     tier = "strong" if "strong" in request.eligible_tiers else None
-    return RouteResponse(selected_tier=tier, proposed_tier=tier, reason=reason,
-                         mode=settings.mode)
+    return RouteResponse(selected_tier=tier, proposed_tier=tier, reason=reason, mode=settings.mode)
 
 
 def preflight(request: RouteRequest, settings: Settings) -> RouteResponse | None:
@@ -78,8 +78,13 @@ def preflight(request: RouteRequest, settings: Settings) -> RouteResponse | None
     return None
 
 
-def decide(request: RouteRequest, settings: Settings, probability: float,
-           inference_ms: float, input_tokens: int) -> RouteResponse:
+def decide(
+    request: RouteRequest,
+    settings: Settings,
+    probability: float,
+    inference_ms: float,
+    input_tokens: int,
+) -> RouteResponse:
     if not math.isfinite(probability) or not 0 <= probability <= 1:
         return conservative(request, settings, "invalid_probability")
     if not math.isfinite(inference_ms) or inference_ms > settings.max_inference_ms:
@@ -89,6 +94,12 @@ def decide(request: RouteRequest, settings: Settings, probability: float,
     reason = "shadow_proposal" if settings.mode == "shadow" else "experimental_threshold"
     if selected not in request.eligible_tiers:
         selected, reason = None, "no_eligible_conservative_tier"
-    return RouteResponse(selected_tier=selected, proposed_tier=proposed, reason=reason,
-                         mode=settings.mode, probability_economy=probability,
-                         inference_ms=inference_ms, input_tokens=input_tokens)
+    return RouteResponse(
+        selected_tier=selected,
+        proposed_tier=proposed,
+        reason=reason,
+        mode=settings.mode,
+        probability_economy=probability,
+        inference_ms=inference_ms,
+        input_tokens=input_tokens,
+    )

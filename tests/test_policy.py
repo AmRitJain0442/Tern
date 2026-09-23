@@ -10,14 +10,17 @@ def test_shadow_never_sends_traffic_to_unvalidated_economy():
     assert result.selected_tier == "strong"
 
 
-@pytest.mark.parametrize("fields,reason", [
-    ({"language": "hi"}, "unsupported_or_unknown_language"),
-    ({"requires_tools": True}, "capability_or_risk_constraint"),
-    ({"requires_vision": True}, "capability_or_risk_constraint"),
-    ({"high_stakes": True}, "capability_or_risk_constraint"),
-    ({"has_conversation_history": True}, "full_conversation_required"),
-    ({"eligible_tiers": ["strong"]}, "economy_ineligible"),
-])
+@pytest.mark.parametrize(
+    "fields,reason",
+    [
+        ({"language": "hi"}, "unsupported_or_unknown_language"),
+        ({"requires_tools": True}, "capability_or_risk_constraint"),
+        ({"requires_vision": True}, "capability_or_risk_constraint"),
+        ({"high_stakes": True}, "capability_or_risk_constraint"),
+        ({"has_conversation_history": True}, "full_conversation_required"),
+        ({"eligible_tiers": ["strong"]}, "economy_ineligible"),
+    ],
+)
 def test_constraints_bypass_classifier(fields, reason):
     args = {"prompt": "Hello", "language": "en", **fields}
     assert preflight(RouteRequest(**args), Settings()).reason == reason
@@ -36,7 +39,10 @@ def test_absent_fallback_does_not_violate_eligibility():
 
 @pytest.mark.parametrize("probability", [float("nan"), float("inf"), -0.1, 1.1])
 def test_invalid_probabilities_fall_back(probability):
-    assert decide(RouteRequest(prompt="Hello"), Settings(), probability, 20, 80).selected_tier == "strong"
+    assert (
+        decide(RouteRequest(prompt="Hello"), Settings(), probability, 20, 80).selected_tier
+        == "strong"
+    )
 
 
 def test_slow_inference_cannot_downroute():
