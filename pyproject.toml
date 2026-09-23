@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "model-router-lab"
+version = "0.1.0"
+description = "Measured Laya routing experiments"
+requires-python = ">=3.11"
+dependencies = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "httpx>=0.28,<1"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.12,<1"]
+mlx-cpu = ["mlx[cpu]==0.32.2; sys_platform == 'linux'", "laya-mlx @ git+https://github.com/mizorewww/laya-mlx.git@0a859518634112655cb97c745dbf04f5191aaf13"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/model_router"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
