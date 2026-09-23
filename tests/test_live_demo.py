@@ -31,6 +31,7 @@ def test_live_runner_checkpoints_real_adapter_outcomes_with_mock_transports(tmp_
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-only-secret")
     monkeypatch.setenv("OPENROUTER_ECONOMY_MODEL", "economy")
     monkeypatch.setenv("OPENROUTER_STRONG_MODEL", "strong")
+    monkeypatch.setenv("LAYA_ENDPOINT", "https://laya.example")
 
     async def token():
         return "test-only-identity"

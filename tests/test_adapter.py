@@ -76,7 +76,7 @@ async def setup(provider_handler=None, route_payload=None, thresholds=None, mode
         for tier in ("economy", "strong")
     ]
     async with LayaGPUClient(
-        token_provider=token, transport=httpx.MockTransport(route_handler)
+        "https://laya.example", token_provider=token, transport=httpx.MockTransport(route_handler)
     ) as laya:
         async with OpenRouterClient(
             "synthetic-api-key", transport=httpx.MockTransport(provider)
@@ -261,7 +261,7 @@ def test_auth_deadline_and_circuit_breaker():
             return "token"
 
         async with LayaGPUClient(
-            token_provider=slow_token, timeout=0.01, failure_threshold=2
+            "https://laya.example", token_provider=slow_token, timeout=0.01, failure_threshold=2
         ) as laya:
             for _ in range(2):
                 with pytest.raises(DecisionUnavailable, match="router_timeout"):
@@ -415,7 +415,7 @@ def test_redirect_does_not_forward_identity_token():
             return "test-token"
 
         async with LayaGPUClient(
-            token_provider=token, transport=httpx.MockTransport(handler)
+            "https://laya.example", token_provider=token, transport=httpx.MockTransport(handler)
         ) as laya:
             with pytest.raises(DecisionUnavailable, match="router_http_302"):
                 await laya.decide(RouteRequest(prompt="hello"))

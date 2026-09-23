@@ -4,14 +4,13 @@ import argparse
 import asyncio
 import json
 import os
+import platform
 import shutil
 from contextlib import aclosing
 from pathlib import Path
-from urllib.parse import urlsplit
 
 from model_router.adapters import (
     ChatRequest,
-    GcloudIDTokenProvider,
     LayaGPUClient,
     NoEligibleModel,
     OpenRouterAdapter,
@@ -19,8 +18,10 @@ from model_router.adapters import (
     ProviderError,
     RoutingContext,
 )
-from model_router.adapters.laya import DEFAULT_ENDPOINT
+from model_router.adapters.laya import LOCAL_ENDPOINT
 from model_router.adapters.types import DecisionUnavailable
+from model_router.connection import connection_settings
+from model_router.policy import RouteRequest
 
 ECONOMY = "google/gemini-2.5-flash-lite"
 STRONG = "google/gemini-2.5-pro"
@@ -138,7 +139,8 @@ def init_config(path, console):
         "OPENROUTER_API_KEY=\n"
         f"OPENROUTER_ECONOMY_MODEL={ECONOMY}\n"
         f"OPENROUTER_STRONG_MODEL={STRONG}\n"
-        f"LAYA_ENDPOINT={DEFAULT_ENDPOINT}\n"
+        f"LAYA_ENDPOINT={LOCAL_ENDPOINT}\n"
+        "LAYA_AUTH=auto\n"
     )
     try:
         with path.open("x", encoding="utf-8") as file:
@@ -148,39 +150,33 @@ def init_config(path, console):
     else:
         console.print("[good]Created configuration.[/] Add your OpenRouter key to it.")
     console.print(
-        "Next: [accent]tern doctor[/]. The default GPU endpoint requires Cloud Run invoker access."
+        "Next: [accent]tern doctor[/]. Start local Laya with [accent]docker compose up --build --wait[/]."
     )
 
 
 def local_checks(auth):
-    endpoint = os.environ.get("LAYA_ENDPOINT", DEFAULT_ENDPOINT)
-    url = urlsplit(endpoint)
-    endpoint_ok = bool(
-        url.scheme == "https"
-        and url.hostname
-        and not url.username
-        and not url.password
-        and not url.query
-        and not url.fragment
-        and url.path in ("", "/")
-    )
+    _, auth, _ = connection_settings(auth)
     key_ok = bool(os.environ.get("OPENROUTER_API_KEY", "").strip())
-    auth_ok = auth == "google" or bool(shutil.which("gcloud.cmd") or shutil.which("gcloud"))
+    auth_ok = auth in {"local", "google"} or bool(
+        shutil.which("gcloud.cmd") or shutil.which("gcloud")
+    )
     return [
         (
             "OpenRouter credential",
-            key_ok,
-            "present (value hidden)" if key_ok else "add OPENROUTER_API_KEY to .env",
+            True,
+            "present (value hidden)" if key_ok else "optional; add OPENROUTER_API_KEY for chat",
         ),
         (
-            "GPU endpoint",
-            endpoint_ok,
-            "HTTPS origin configured" if endpoint_ok else "set LAYA_ENDPOINT to an HTTPS origin",
+            "Laya endpoint",
+            True,
+            "local loopback configured" if auth == "local" else "HTTPS origin configured",
         ),
         (
-            "Google authentication",
+            "Authentication",
             auth_ok,
-            "metadata / service-account mode; verified by --live"
+            "local; no Google account needed"
+            if auth == "local"
+            else "metadata / service-account mode; verified by --live"
             if auth == "google"
             else "gcloud available; run gcloud auth login"
             if auth_ok
@@ -190,18 +186,54 @@ def local_checks(auth):
 
 
 def make_laya(args):
-    return LayaGPUClient(
-        os.environ.get("LAYA_ENDPOINT", DEFAULT_ENDPOINT),
-        token_provider=GcloudIDTokenProvider() if args.auth == "gcloud" else None,
-    )
+    endpoint, _, options = connection_settings(args.auth)
+    return LayaGPUClient(endpoint, **options)
 
 
 async def doctor_live(args):
-    async with OpenRouterClient(os.environ["OPENROUTER_API_KEY"]) as provider:
-        await provider.check_credentials()
-        await provider.models(assignments())
     async with make_laya(args) as laya:
         await laya.warmup()
+    key = os.environ.get("OPENROUTER_API_KEY", "").strip()
+    if key:
+        async with OpenRouterClient(key) as provider:
+            await provider.check_credentials()
+            await provider.models(assignments())
+
+
+async def route_prompt(args, console):
+    async with make_laya(args) as laya:
+        await laya.warmup()
+        result = await laya.decide(RouteRequest(prompt=args.prompt, language=args.language))
+    emit_json(console, result.model_dump())
+
+
+def serve(args, console):
+    """First startup downloads the pinned checkpoint; later starts reuse the HF cache."""
+    if not 1 <= args.port <= 65535:
+        raise ValueError("Port must be 1..65535")
+    os.environ.setdefault("OPENBLAS_NUM_THREADS", "2")
+    os.environ.setdefault("OMP_NUM_THREADS", "2")
+    try:
+        import laya_mlx  # noqa: F401
+        import mlx.core  # noqa: F401
+    except ImportError:
+        raise ValueError(
+            "MLX is not installed. Use docker compose up --build --wait, or "
+            "uv run --extra cli --extra mlx-metal tern serve on Apple Silicon."
+        ) from None
+    import uvicorn
+
+    device = args.device
+    if device == "auto":
+        device = "gpu" if platform.system() == "Darwin" else "cpu"
+    os.environ["MLX_DEVICE"] = device
+    os.environ["MLX_DTYPE"] = "float32" if device == "cpu" else "float16"
+    os.environ.setdefault("MAX_INFERENCE_MS", "30000" if device == "cpu" else "2000")
+    console.print("Loading pinned Laya weights; the first run downloads the model.")
+    console.print(
+        "Readiness requires a real forward pass. Keep this terminal open; Ctrl+C stops Laya."
+    )
+    uvicorn.run("model_router.app:app", host="127.0.0.1", port=args.port, access_log=False)
 
 
 def assignments():
@@ -229,10 +261,8 @@ async def chat(args, console):
     )
     async with make_laya(args) as laya, OpenRouterClient(key) as provider:
         if not args.json:
-            heading(console, "LIVE  ·  private GPU routing + OpenRouter")
-            console.print(
-                "  [muted]Preparing the GPU service (cold startup can take about a minute)...[/]"
-            )
+            heading(console, "LIVE  ·  Laya routing + OpenRouter")
+            console.print("  [muted]Checking Laya readiness...[/]")
         await laya.warmup()
         router = OpenRouterAdapter(
             await provider.models(assignments()), laya, provider, experimental_thresholds=thresholds
@@ -283,6 +313,15 @@ def parser():
         "--env-file", type=Path, default=Path(".env"), help="local configuration (default: .env)"
     )
     commands = result.add_subparsers(dest="command", required=True)
+    server = commands.add_parser("serve", help="download/load real Laya and serve locally")
+    server.add_argument("--device", choices=["auto", "cpu", "gpu"], default="auto")
+    server.add_argument("--port", type=positive_int, default=8080)
+    route = commands.add_parser(
+        "route", help="classify a prompt with real Laya; no OpenRouter key needed"
+    )
+    route.add_argument("prompt")
+    route.add_argument("--language", default="en")
+    route.add_argument("--auth", choices=["auto", "local", "gcloud", "google"], default="auto")
     results = commands.add_parser("results", help="view saved live-run tags without API calls")
     results.add_argument("path", type=Path, help="saved live-run JSON file")
     demo = commands.add_parser(
@@ -311,7 +350,7 @@ def parser():
         type=threshold,
         help="explicit live economy threshold; default respects shadow mode",
     )
-    demo.add_argument("--auth", choices=["gcloud", "google"], default="gcloud")
+    demo.add_argument("--auth", choices=["auto", "local", "gcloud", "google"], default="auto")
     demo_output = demo.add_mutually_exclusive_group()
     demo_output.add_argument(
         "--json", action="store_true", help="emit all 100 results and summary as JSON"
@@ -328,12 +367,12 @@ def parser():
         action="store_true",
         help="also wake the GPU and verify the model catalog (GCP charges may apply)",
     )
-    doctor.add_argument("--auth", choices=["gcloud", "google"], default="gcloud")
+    doctor.add_argument("--auth", choices=["auto", "local", "gcloud", "google"], default="auto")
     live = commands.add_parser(
         "chat", help="route one prompt through your GPU service and OpenRouter (paid)"
     )
     live.add_argument("prompt", help="one text prompt; quote it in your shell")
-    live.add_argument("--auth", choices=["gcloud", "google"], default="gcloud")
+    live.add_argument("--auth", choices=["auto", "local", "gcloud", "google"], default="auto")
     live.add_argument("--language", default="en", help="trusted prompt language (default: en)")
     live.add_argument("--workload", choices=["chat", "coding", "business"], default="chat")
     live.add_argument(
@@ -378,6 +417,9 @@ def main(argv=None, *, console=None):
     args = parser().parse_args(argv)
     console = console or make_console()
     try:
+        if args.command == "serve":
+            serve(args, console)
+            return 0
         if args.command == "results":
             try:
                 report = json.loads(args.path.read_text(encoding="utf-8"))
@@ -427,6 +469,9 @@ def main(argv=None, *, console=None):
         from dotenv import load_dotenv
 
         load_dotenv(args.env_file, override=False)
+        if args.command == "route":
+            asyncio.run(route_prompt(args, console))
+            return 0
         if args.command == "doctor":
             heading(console, "SETUP CHECK  ·  credential values are never printed")
             checks = local_checks(args.auth)
@@ -436,7 +481,7 @@ def main(argv=None, *, console=None):
                 return 1
             if args.live:
                 console.print(
-                    "\n  [muted]Checking Cloud Run readiness and the OpenRouter model catalog...[/]"
+                    "\n  [muted]Checking Laya; checking OpenRouter only if a key is configured...[/]"
                 )
                 asyncio.run(doctor_live(args))
                 console.print("  [good]Live connectivity checks passed.[/]")
@@ -464,7 +509,7 @@ def main(argv=None, *, console=None):
     except Exception:
         # HTTP/auth exceptions may carry sensitive headers or upstream response text.
         console.print(
-            "Connection failed. Check your network, credentials and Cloud Run invoker access.",
+            "Connection failed. Run tern doctor; check that Laya is running and credentials are valid.",
             style="red",
         )
         return 1

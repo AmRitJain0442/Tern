@@ -194,7 +194,9 @@ async def run_demo():
         )
         for tier in ("economy", "strong")
     ]
-    async with LayaGPUClient(token_provider=token, transport=httpx.MockTransport(classify)) as laya:
+    async with LayaGPUClient(
+        "https://offline.example", token_provider=token, transport=httpx.MockTransport(classify)
+    ) as laya:
         async with OpenRouterClient("offline-demo", transport=httpx.MockTransport(complete)) as api:
             router = OpenRouterAdapter(
                 models,

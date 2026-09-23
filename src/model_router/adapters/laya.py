@@ -1,4 +1,4 @@
-"""Bounded authenticated client for the existing private MLX GPU decision endpoint."""
+"""Bounded client for local Laya or an authenticated HTTPS deployment."""
 
 import asyncio
 import math
@@ -14,7 +14,36 @@ from model_router.adapters.types import DecisionUnavailable
 from model_router.backend import MODEL_REVISION
 from model_router.policy import RouteRequest, RouteResponse
 
-DEFAULT_ENDPOINT = "https://model-router-laya-gpu-635367932686.asia-southeast1.run.app"
+LOCAL_ENDPOINT = "http://127.0.0.1:8080"
+DEFAULT_ENDPOINT = LOCAL_ENDPOINT
+
+
+def endpoint_is_local(endpoint):
+    """Only literal loopback hosts may bypass TLS/auth; never resolve arbitrary DNS."""
+    url = urlsplit(endpoint)
+    return url.hostname in {"127.0.0.1", "::1", "localhost"}
+
+
+def validate_endpoint(endpoint, *, local=False):
+    url = urlsplit(endpoint)
+    try:
+        port = url.port
+    except ValueError:
+        raise ValueError("Invalid Laya endpoint port") from None
+    if (
+        not url.hostname
+        or url.username is not None
+        or url.password is not None
+        or url.query
+        or url.fragment
+        or url.path not in ("", "/")
+        or (port is not None and not 1 <= port <= 65535)
+        or (local and (url.scheme != "http" or not endpoint_is_local(endpoint)))
+        or (not local and url.scheme != "https")
+    ):
+        raise ValueError(
+            "Local Laya requires an HTTP loopback origin; remote Laya requires an HTTPS origin"
+        )
 
 
 class LayaGPUClient:
@@ -23,23 +52,20 @@ class LayaGPUClient:
         endpoint=DEFAULT_ENDPOINT,
         *,
         token_provider: Callable[[], Awaitable[str]] | None = None,
-        timeout=0.75,
+        timeout=None,
         failure_threshold=3,
         cooldown=15.0,
         expected_revision=MODEL_REVISION,
         transport=None,
+        local=None,
     ):
-        url = urlsplit(endpoint)
-        if (
-            url.scheme != "https"
-            or not url.hostname
-            or url.username
-            or url.password
-            or url.query
-            or url.fragment
-            or url.path not in ("", "/")
-        ):
-            raise ValueError("Laya endpoint must be an HTTPS origin without credentials or query")
+        if local is None:
+            local = endpoint_is_local(endpoint)
+        if timeout is None:
+            timeout = 30.0 if local else 0.75
+        validate_endpoint(endpoint, local=local)
+        if local and token_provider is not None:
+            raise ValueError("Local Laya must not receive a Google token provider")
         if (
             not math.isfinite(timeout)
             or timeout <= 0
@@ -49,12 +75,17 @@ class LayaGPUClient:
         ):
             raise ValueError("Invalid deadline or circuit settings")
         self.endpoint = endpoint.rstrip("/")
-        self.token_provider = token_provider or GoogleIDTokenProvider(self.endpoint)
+        self.local = local
+        self.token_provider = (
+            None if local else token_provider or GoogleIDTokenProvider(self.endpoint)
+        )
         self.timeout, self.failure_threshold, self.cooldown = timeout, failure_threshold, cooldown
         self.expected_revision = expected_revision
         self._failures = 0
         self._open_until = 0.0
-        self._http = httpx.AsyncClient(transport=transport, follow_redirects=False, timeout=timeout)
+        self._http = httpx.AsyncClient(
+            transport=transport, follow_redirects=False, timeout=timeout, trust_env=not local
+        )
 
     async def __aenter__(self):
         return self
@@ -66,6 +97,8 @@ class LayaGPUClient:
         await self._http.aclose()
 
     async def _headers(self):
+        if self.local:
+            return {}
         try:
             token = await self.token_provider()
             if not isinstance(token, str) or not token.strip():

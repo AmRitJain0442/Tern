@@ -15,13 +15,12 @@ from time import perf_counter
 
 from model_router.adapters import (
     ChatRequest,
-    GcloudIDTokenProvider,
     LayaGPUClient,
     OpenRouterAdapter,
     OpenRouterClient,
     RoutingContext,
 )
-from model_router.adapters.laya import DEFAULT_ENDPOINT
+from model_router.connection import connection_settings
 from model_router.policy import RouteRequest
 
 
@@ -35,17 +34,17 @@ async def main(args):
     }
     if len(assignments) != 2:
         raise SystemExit("Economy and strong model IDs must differ")
+    endpoint, _, options = connection_settings()
+    options["timeout"] = args.router_timeout
     result = {
         "kind": "synthetic_adapter_smoke_not_quality_evaluation",
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "endpoint": os.environ.get("LAYA_ENDPOINT", DEFAULT_ENDPOINT),
+        "endpoint": endpoint,
         "experimental_threshold": 0.7,
         "rows": [],
     }
     async with (
-        LayaGPUClient(
-            result["endpoint"], token_provider=GcloudIDTokenProvider(), timeout=args.router_timeout
-        ) as laya,
+        LayaGPUClient(endpoint, **options) as laya,
         OpenRouterClient(api_key, timeout=90) as provider,
     ):
         started = perf_counter()

@@ -1,7 +1,7 @@
 """Live streaming with explicit lifecycle management.
 
 Run from the repository: uv run --extra cli --env-file .env python examples/stream.py
-Requires a configured key and Cloud Run invoker access. Incurs live usage charges.
+Requires a running Laya service and an OpenRouter key. Incurs generation charges.
 """
 
 import asyncio
@@ -10,21 +10,18 @@ from contextlib import aclosing
 
 from model_router.adapters import (
     ChatRequest,
-    GcloudIDTokenProvider,
     LayaGPUClient,
     OpenRouterAdapter,
     OpenRouterClient,
     RoutingContext,
 )
-from model_router.adapters.laya import DEFAULT_ENDPOINT
+from model_router.connection import connection_settings
 
 
 async def main():
+    endpoint, _, options = connection_settings()
     async with (
-        LayaGPUClient(
-            os.environ.get("LAYA_ENDPOINT", DEFAULT_ENDPOINT),
-            token_provider=GcloudIDTokenProvider(),  # On GCP, omit this to use workload identity.
-        ) as laya,
+        LayaGPUClient(endpoint, **options) as laya,
         OpenRouterClient(os.environ["OPENROUTER_API_KEY"]) as provider,
     ):
         await laya.warmup()

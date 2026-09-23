@@ -79,7 +79,8 @@ def test_doctor_hides_credentials_and_honors_environment(tmp_path, monkeypatch):
     path = tmp_path / ".env"
     path.write_text("OPENROUTER_API_KEY=file-sentinel\n")
     monkeypatch.setenv("OPENROUTER_API_KEY", "environment-sentinel")
-    code, output = invoke(["--env-file", str(path), "doctor", "--auth", "google"])
+    monkeypatch.setenv("LAYA_ENDPOINT", "http://127.0.0.1:8080")
+    code, output = invoke(["--env-file", str(path), "doctor"])
     assert code == 0
     assert "sentinel" not in output
     assert "Local checks only" in output
@@ -90,9 +91,11 @@ def test_doctor_hides_credentials_and_honors_environment(tmp_path, monkeypatch):
 
 def test_doctor_missing_key_is_actionable(tmp_path, monkeypatch):
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
-    code, output = invoke(["--env-file", str(tmp_path / ".env"), "doctor", "--auth", "google"])
-    assert code == 1
+    monkeypatch.setenv("LAYA_ENDPOINT", "http://127.0.0.1:8080")
+    code, output = invoke(["--env-file", str(tmp_path / ".env"), "doctor"])
+    assert code == 0
     assert "add OPENROUTER_API_KEY" in output
+    assert "no Google account needed" in output
 
 
 @pytest.mark.parametrize(

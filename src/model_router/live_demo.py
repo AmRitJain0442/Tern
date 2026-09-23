@@ -12,14 +12,13 @@ from time import perf_counter
 
 from model_router.adapters import (
     ChatRequest,
-    GcloudIDTokenProvider,
     LayaGPUClient,
     OpenRouterAdapter,
     OpenRouterClient,
     ProviderError,
     RoutingContext,
 )
-from model_router.adapters.laya import DEFAULT_ENDPOINT
+from model_router.connection import connection_settings
 from model_router.demo import EXPECTED_TAGS, demo_cases
 
 CURRENT_ROW = ContextVar("live_demo_row", default=None)
@@ -193,7 +192,7 @@ async def run_live_demo(
     max_tokens=2048,
     concurrency=4,
     experimental_threshold=None,
-    auth="gcloud",
+    auth="auto",
     progress=print,
 ):
     key = os.environ.get("OPENROUTER_API_KEY", "").strip()
@@ -208,6 +207,7 @@ async def run_live_demo(
     if len(assignments) != 2:
         raise ValueError("Economy and strong models must differ")
     cases = live_cases(max_tokens)
+    endpoint, _, connection = connection_settings(auth)
     path = (
         Path(output)
         if output
@@ -222,7 +222,7 @@ async def run_live_demo(
         "kind": "live_integration_run_with_synthetic_prompts_not_quality_evaluation",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "status": "starting",
-        "endpoint": os.environ.get("LAYA_ENDPOINT", DEFAULT_ENDPOINT),
+        "endpoint": endpoint,
         "max_tokens_per_attempt": max_tokens,
         "generation_concurrency": concurrency,
         "classifier_concurrency": 1,
@@ -262,14 +262,14 @@ async def run_live_demo(
         async with (
             RecordedLaya(
                 report["endpoint"],
-                token_provider=(GcloudIDTokenProvider() if auth == "gcloud" else None),
+                **connection,
             ) as laya,
             RecordedProvider(key, timeout=120) as provider,
         ):
             await provider.check_credentials()
             models = await provider.models(assignments)
             started = perf_counter()
-            progress("Warming the private GPU service...")
+            progress("Checking Laya readiness...")
             report["health"] = await laya.warmup()
             report["warmup_ms"] = (perf_counter() - started) * 1000
             report["models"] = [m.model_dump(mode="json") for m in models]
