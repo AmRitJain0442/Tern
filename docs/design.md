@@ -57,8 +57,8 @@ For agents, evaluate complete tasks, including tool calls and retries. Per-turn 
 | Option | Advantage | Cost/latency tradeoff | Decision |
 |---|---|---|---|
 | MLX on local Apple Silicon | Existing hardware, no request network hop | Not this Windows/GCP environment; Mac measurements do not transfer | Edge option for Mac clients |
-| Cloud Run CPU | Scale-to-zero, straightforward deployment | Cold starts and CPU forward-pass latency | Current experimental host |
-| Cloud Run L4 | Managed GPU, scale-to-zero, batching potential | Minimum CPU/RAM allocation and billed warm instance time | Benchmark if CPU misses measured SLO |
+| Cloud Run CPU | Scale-to-zero, straightforward deployment | Cold starts and CPU forward-pass latency | Measured MLX CPU path rejected; PyTorch CPU remains a candidate |
+| Cloud Run L4 | Managed GPU, scale-to-zero, batching potential | Minimum CPU/RAM allocation and billed warm instance time | Current MLX prototype; production economics still need workload data |
 | Compute Engine GPU | Control of runtime and sustained throughput | VM operations and idle cost | Consider for steady volume |
 | Vertex AI endpoint | Managed model lifecycle and deployment integration | Pricing and scaling depend on endpoint type | Use when lifecycle requirements justify it |
 | GKE | Shared serving fleet and scheduling flexibility | Operational overhead | Defer for this small service |

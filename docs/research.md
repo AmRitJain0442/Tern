@@ -10,7 +10,7 @@ Laya-MLX is an independent port. Its published Apple Silicon benchmarks and nume
 
 ## Hosting finding
 
-MLX itself now supports Linux CPU and NVIDIA CUDA, so “MLX can only run on a Mac” is outdated. Laya-MLX advertises Apple Silicon; its Linux portability still needs actual execution. Explicitly installing `mlx[cpu]` is necessary because the port's MLX dependency is conditional on macOS. CPU float32 is the first portability experiment; CUDA and float16 require separate validation. [Official MLX installation](https://ml-explore.github.io/mlx/build/html/install.html).
+MLX itself now supports Linux CPU and NVIDIA CUDA, so “MLX can only run on a Mac” is outdated. Laya-MLX advertises Apple Silicon. We subsequently executed its Linux CPU float32 and L4 CUDA float16 paths; results and limited parity checks are in [findings](findings.md). Explicit backend installation is necessary because the port's MLX dependency is conditional on macOS. [Official MLX installation](https://ml-explore.github.io/mlx/build/html/install.html).
 
 ## Research questions
 
