@@ -15,18 +15,51 @@ def invoke(args):
 
 
 def test_demo_is_offline_and_exercises_real_policy(monkeypatch):
+    from model_router.adapters import OpenRouterClient
+
+    dispatched = []
+    original_complete = OpenRouterClient.complete
+
+    async def record_complete(self, model, request):
+        dispatched.append((model, request.messages[0]["content"]))
+        return await original_complete(self, model, request)
+
     def prohibit_network(*args, **kwargs):
         raise AssertionError("Offline demo attempted a network connection")
 
     monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request", prohibit_network)
+    monkeypatch.setattr(OpenRouterClient, "complete", record_complete)
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     code, output = invoke(["demo", "--json"])
     assert code == 0
     data = json.loads(output)
     assert data["synthetic"] is True
     assert data["network_requests"] == 0
-    assert [row["tier"] for row in data["rows"]] == ["economy", "strong", "strong", "strong"]
-    assert data["rows"][-1]["reason"] == "router_http_503"
+    assert len(data["rows"]) == len(dispatched) == 100
+    assert len({prompt for _, prompt in dispatched}) == 100
+    assert [row["id"] for row in data["rows"]] == list(range(1, 101))
+    assert data["summary"] == {
+        "total_requests": 100,
+        "routes": {"economy": 25, "strong": 75},
+        "categories": {"rewrites": 25, "coding": 25, "tools": 25, "outages": 25},
+    }
+    assert sum(model == "demo/economy" for model, _ in dispatched) == 25
+    assert sum(row["reason"] == "router_http_503" for row in data["rows"]) == 25
+    assert sum(row["reason"] == "capability_or_risk_constraint" for row in data["rows"]) == 25
+    assert not any(row["reason"] == "router_circuit_open" for row in data["rows"])
+
+
+def test_demo_summary_and_full_output():
+    code, summary = invoke(["demo"])
+    assert code == 0
+    assert "100 requests completed" in summary
+    assert "25 economy" in summary and "75 strong" in summary
+    assert "tern demo --all" in summary
+    code, full = invoke(["demo", "--all"])
+    assert code == 0
+    assert "Rewrite this politely: send the report." in full
+    assert "Summarize the delivery plan" in full
+    assert "100 requests completed" in full
 
 
 def test_init_never_overwrites_existing_configuration(tmp_path):
@@ -68,6 +101,7 @@ def test_doctor_missing_key_is_actionable(tmp_path, monkeypatch):
         ["chat", "hello", "--experimental-threshold", "nan"],
         ["chat", "hello", "--experimental-threshold", "0.5"],
         ["chat", "hello", "--stream", "--json"],
+        ["demo", "--all", "--json"],
     ],
 )
 def test_cli_rejects_invalid_settings(arguments):

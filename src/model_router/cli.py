@@ -49,33 +49,60 @@ def emit_json(console, data):
     console.print(json.dumps(data), markup=False, highlight=False, soft_wrap=True)
 
 
-def show_demo(console, data):
+def show_demo(console, data, *, show_all=False):
     from rich.table import Table
 
     heading(console, "OFFLINE DEMO  ·  real adapter, synthetic responses")
     table = Table(box=None, padding=(0, 2), show_edge=False)
-    table.add_column("REQUEST", style="white")
+    table.add_column("REQUEST" if show_all else "SCENARIO", style="white")
+    table.add_column("#" if show_all else "COUNT", justify="right")
     table.add_column("ROUTE")
     table.add_column("WHY", style="muted")
-    reasons = [
-        "0.82 >= 0.70 threshold",
-        "0.41 < 0.70 threshold",
-        "tool capability required",
-        "classifier unavailable",
-    ]
-    for row, reason in zip(data["rows"], reasons):
+    reasons = {
+        "capability_or_risk_constraint": "tool capability required",
+        "router_http_503": "classifier unavailable",
+    }
+    labels = {
+        "rewrites": "Polite rewrites",
+        "coding": "Coding tasks",
+        "tools": "Weather tool requests",
+        "outages": "Classifier outages",
+    }
+    rows = (
+        data["rows"]
+        if show_all
+        else [
+            next(row for row in data["rows"] if row["category"] == category)
+            for category in data["summary"]["categories"]
+        ]
+    )
+    for row in rows:
+        reason = reasons.get(row["reason"], row["reason"])
+        if row["probability"] is not None:
+            comparison = ">=" if row["tier"] == "economy" else "<"
+            reason = f"{row['probability']:.2f} {comparison} 0.70 threshold"
         style = "accent" if row["tier"] == "economy" else "good"
-        table.add_row(row["prompt"], f"[{style}]{row['tier'].upper()}[/]", reason)
+        table.add_row(
+            row["prompt"] if show_all else labels[row["category"]],
+            str(row["id"] if show_all else data["summary"]["categories"][row["category"]]),
+            f"[{style}]{row['tier'].upper()}[/]",
+            reason,
+        )
     console.print(table)
     console.print()
     console.print(
-        "  [good]4 routes completed[/]  [muted]·  no API key  ·  no GPU  ·  no network[/]"
+        f"  [good]{data['summary']['total_requests']} requests completed[/]  "
+        f"[accent]{data['summary']['routes'].get('economy', 0)} economy[/]  "
+        f"[good]{data['summary']['routes'].get('strong', 0)} strong[/]"
     )
+    console.print("  [muted]No API key  ·  no GPU  ·  no network[/]")
     console.print("  [muted]Illustrative scores. Live routing defaults to the strong model.[/]")
+    if not show_all:
+        console.print(
+            "  [muted]Every request:[/] [accent]tern demo --all[/]  [muted]JSON:[/] [accent]tern demo --json[/]"
+        )
     console.print()
-    console.print(
-        "  Next  [accent]tern init[/]  [muted]then[/]  [accent]tern doctor[/]"
-    )
+    console.print("  Next  [accent]tern init[/]  [muted]then[/]  [accent]tern doctor[/]")
     console.print()
 
 
@@ -230,8 +257,16 @@ def parser():
         "--env-file", type=Path, default=Path(".env"), help="local configuration (default: .env)"
     )
     commands = result.add_subparsers(dest="command", required=True)
-    demo = commands.add_parser("demo", help="try four routes offline, without credentials")
-    demo.add_argument("--json", action="store_true", help="emit machine-readable demo results")
+    demo = commands.add_parser(
+        "demo", help="route 100 synthetic requests offline, without credentials"
+    )
+    demo_output = demo.add_mutually_exclusive_group()
+    demo_output.add_argument(
+        "--json", action="store_true", help="emit all 100 results and summary as JSON"
+    )
+    demo_output.add_argument(
+        "--all", action="store_true", help="show every request instead of the compact summary"
+    )
     commands.add_parser("init", help="create .env without replacing existing values")
     doctor = commands.add_parser(
         "doctor", help="check local configuration without exposing credentials"
@@ -298,7 +333,7 @@ def main(argv=None, *, console=None):
             if args.json:
                 emit_json(console, data)
             else:
-                show_demo(console, data)
+                show_demo(console, data, show_all=args.all)
             return 0
         if args.command == "init":
             init_config(args.env_file, console)
