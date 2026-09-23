@@ -1,0 +1,17 @@
+.venv/
+.research/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.env
+.env.*
+!.env.example
+models/
+*.safetensors
+*.pt
+*.onnx
+artifacts/private/
+dist/
+build/
+*.log
