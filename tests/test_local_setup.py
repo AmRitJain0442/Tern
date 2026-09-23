@@ -128,3 +128,46 @@ def test_route_cli_needs_neither_google_nor_openrouter(tmp_path, monkeypatch):
     )
     assert code == 0
     assert json.loads(output.getvalue())["probability_economy"] == 0.8
+
+
+def test_model_download_resumes_and_cached_restart_needs_no_network(tmp_path, monkeypatch):
+    import sys
+    from types import SimpleNamespace
+
+    from model_router.local_service import prepare_model
+
+    base = tmp_path / "weights"
+    calls = []
+
+    def download(model, *, revision, local_dir, allow_patterns):
+        assert revision == MODEL_REVISION
+        assert "*.py" not in allow_patterns
+        calls.append(model)
+        local_dir.mkdir(parents=True, exist_ok=True)
+        (local_dir / "model.safetensors").write_bytes(b"synthetic-test-weight")
+        if len(calls) == 1:
+            raise OSError("interrupted download")
+        for name in (
+            "rl_agent_config.json",
+            "encoder/config.json",
+            "tokenizer/tokenizer.json",
+            "mlx_config.json",
+        ):
+            path = local_dir / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("{}")
+
+    monkeypatch.setitem(sys.modules, "huggingface_hub", SimpleNamespace(snapshot_download=download))
+    monkeypatch.setenv("MODEL_PATH", str(base))
+    with pytest.raises(OSError):
+        prepare_model()
+    assert not (base / MODEL_REVISION / ".tern-download-complete").exists()
+    prepare_model()
+    import os
+
+    assert os.environ["MODEL_PATH"] == str(base / MODEL_REVISION)
+    assert os.environ["HF_HUB_OFFLINE"] == "1"
+    # Restart resets the environment to the base directory specified in the image.
+    monkeypatch.setenv("MODEL_PATH", str(base))
+    prepare_model()
+    assert len(calls) == 2

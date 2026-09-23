@@ -1,0 +1,31 @@
+name: tern
+services:
+  laya:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    # MLX CPU wheels are tested here on x86_64; Apple Silicon should use native Metal.
+    platform: linux/amd64
+    ports:
+      - "127.0.0.1:${TERN_PORT:-8080}:8080"
+    environment:
+      LAYA_ENDPOINT: http://127.0.0.1:8080
+      LAYA_AUTH: local
+      LAYA_TIMEOUT: "30"
+      MAX_INFERENCE_MS: "30000"
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_ECONOMY_MODEL: ${OPENROUTER_ECONOMY_MODEL:-google/gemini-2.5-flash-lite}
+      OPENROUTER_STRONG_MODEL: ${OPENROUTER_STRONG_MODEL:-google/gemini-2.5-pro}
+    volumes:
+      - weights:/models
+      - results:/app/artifacts
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=5).close()"]
+      interval: 5s
+      timeout: 6s
+      start_period: 5m
+      retries: 120
+    init: true
+volumes:
+  weights:
+  results:

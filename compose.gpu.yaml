@@ -1,0 +1,18 @@
+# Optional Linux/WSL2 NVIDIA path; requires a compatible driver and NVIDIA Container Toolkit.
+services:
+  laya:
+    build:
+      args:
+        MLX_EXTRA: mlx-cuda
+    environment:
+      MLX_DEVICE: gpu
+      MLX_DTYPE: float16
+      LAYA_TIMEOUT: "5"
+      MAX_INFERENCE_MS: "2000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

@@ -13,3 +13,5 @@ jobs:
       - run: uv sync --frozen --extra dev --extra cli --python 3.12
       - run: uv run --no-sync ruff check src tests scripts examples
       - run: uv run --no-sync pytest -q
+      - run: docker compose --env-file /dev/null config --quiet
+      - run: docker compose --env-file /dev/null -f compose.yaml -f compose.gpu.yaml config --quiet

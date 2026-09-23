@@ -1,5 +1,6 @@
 *
 !Dockerfile
+!Dockerfile.local
 !Dockerfile.cuda-headers
 !pyproject.toml
 !uv.lock
