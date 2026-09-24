@@ -1,0 +1,6 @@
+{
+  "model": "tern/auto",
+  "messages": [{"role": "user", "content": "Rewrite politely: send the report."}],
+  "max_tokens": 2048,
+  "routing": {"input_tokens": 256, "language": "en", "workload": "chat"}
+}

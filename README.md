@@ -12,9 +12,10 @@
 </p>
 
 <p align="center">
-  <a href="#try-it-in-a-minute">Quickstart</a> ·
+  <a href="#start-locally">Quickstart</a> ·
   <a href="docs/quickstart.md">CLI guide</a> ·
   <a href="docs/adapter.md">Python API</a> ·
+  <a href="docs/providers.md">HTTP API & providers</a> ·
   <a href="docs/findings.md">Benchmarks</a> ·
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
@@ -23,13 +24,13 @@
 
 **Small router. Clear decisions.**
 
-Tern uses [Laya-MLX](https://huggingface.co/aac6fef/laya-mlx) to help choose between economy and strong models, then sends your request through OpenRouter. It combines capability checks, conservative fallback, and an async Python adapter that preserves messages, tool calls, streaming chunks, and usage.
+Tern uses [Laya-MLX](https://huggingface.co/aac6fef/laya-mlx) to help choose between economy and strong models, then sends your request to configurable providers. It combines capability checks, conservative fallback, a Chat Completions API, and an async Python adapter that preserves messages, tool calls, streaming chunks, and usage.
 
 Run real Laya locally with one setup command. No GCP account or API key is needed for classification.
 
 ## Start locally
 
-Requires Git and a running Docker installation with Compose v2. The repository currently requires collaborator access.
+Requires Git and a running Docker installation with Compose 2.24 or later. The repository currently requires collaborator access.
 
 ```sh
 git clone https://github.com/AmRitJain0442/tern.git
@@ -66,6 +67,10 @@ Add `--all` to the demo command to see every fixture, or `--json` to export its 
 <sub>Captured from the CLI. Demo scores are illustrative, not benchmark results. [Text transcript](docs/assets/terminal-demo.txt).</sub>
 
 ## Connect your models
+
+**Use Tern from your app:** base URL `http://127.0.0.1:8080/v1`, model `tern/auto`. The setup command also starts `/v1/chat/completions`, with streaming and optional `TERN_API_KEY` authentication. [API request examples and provider setup](docs/providers.md).
+
+OpenRouter works by default. Use `TERN_CONFIG=config/providers.json` for other compatible endpoints, local model servers, or different providers per tier. Native vendor APIs can connect through a translation gateway such as LiteLLM. [Configuration examples and compatibility boundaries](docs/providers.md#platform-coverage).
 
 ```sh
 # Add OPENROUTER_API_KEY=your-key to a .env file in this directory, then:
@@ -119,7 +124,7 @@ flowchart LR
     C --> D[Routing policy]
     D -->|Explicit economy policy| F[Economy model]
     D -->|Shadow or fallback| E
-    F --> G[OpenRouter response]
+    F --> G[Configured provider response]
     E --> G
 ```
 
@@ -143,6 +148,7 @@ These are small feasibility probes, not production SLAs or savings claims. Start
 | I want to… | Start here |
 |:--|:--|
 | Run the CLI and fix setup issues | [Quickstart](docs/quickstart.md) |
+| Connect my app or choose model providers | [HTTP API and provider configuration](docs/providers.md) |
 | Integrate completions or streaming in Python | [Adapter guide](docs/adapter.md) · [Runnable streaming example](examples/stream.py) |
 | Deploy the private GPU service | [GPU operations](docs/operations.md#gpu-experiment) |
 | Understand routing tradeoffs | [Research](docs/research.md) · [Design](docs/design.md) |

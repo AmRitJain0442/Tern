@@ -1,6 +1,6 @@
 # From clone to real local routing
 
-GCP is optional. Local Laya classification needs no API key; OpenRouter is needed only when you want downstream answers.
+GCP is optional. Local Laya classification needs no API key. For downstream answers, use OpenRouter by default or [configure other providers and call the Tern API](providers.md).
 
 ## 1. One-command setup
 
@@ -11,7 +11,7 @@ git clone https://github.com/AmRitJain0442/tern.git
 cd tern
 ```
 
-Install and start [Docker Desktop](https://docs.docker.com/desktop/) or Docker Engine with Compose v2. Then run this in PowerShell, bash or zsh:
+Install and start [Docker Desktop](https://docs.docker.com/desktop/) or Docker Engine with Compose 2.24 or later. Then run this in PowerShell, bash or zsh:
 
 ```sh
 docker compose up --build --wait
@@ -40,9 +40,11 @@ docker compose exec laya tern doctor --live
 
 `route` uses actual Laya inference and prints the selected tier, proposed tier, score, reason and timings as JSON. It never calls OpenRouter. The service defaults to **shadow mode**: it reports Laya's proposed tier and probability but selects `strong`. These scores are not demonstrated downstream answer-quality probabilities.
 
-`doctor --live` verifies Laya readiness. If an OpenRouter key is configured it also validates that key and the model catalog, without purchasing a generation. With no key it checks only Laya.
+`doctor --live` verifies Laya readiness. In default mode, an OpenRouter key also enables key/catalog validation without purchasing a generation; with no key it checks only Laya. With `TERN_CONFIG`, it checks provider configuration and credential presence instead. Custom provider connectivity is verified by a completion.
 
 ## 3. Generate answers (optional)
+
+The server also exposes a Chat Completions API at `http://127.0.0.1:8080/v1` with model `tern/auto`. [HTTP requests, authentication, and provider configuration](providers.md) use the same running service as the CLI.
 
 Create a `.env` file in the repository root with your own key, or add it to your existing file:
 
@@ -123,9 +125,9 @@ These commands execute 100 fixture requests through the adapter using synthetic 
 docker compose exec laya tern demo --live --experimental-threshold 0.7
 ```
 
-This runs 100 real OpenRouter completions: 25 rewrites, 25 coding prompts, 25 tool-call requests, and 25 short summaries. All prompts are synthetic test inputs, but classifier scores and generation responses are real. No model scores, completions or outages are simulated. The weather tool calls are checked for their function name and city; the tools themselves are not executed.
+This runs 100 real completions through OpenRouter by default, or through the providers in `TERN_CONFIG`: 25 rewrites, 25 coding prompts, 25 tool-call requests, and 25 short summaries. All prompts are synthetic test inputs, but classifier scores and generation responses are real. No model scores, completions or outages are simulated. The weather tool calls are checked for their function name and city; the tools themselves are not executed. Custom providers need correctly declared tool capabilities to handle those fixtures.
 
-The 75 text requests are eligible for classification by your configured Laya service. The 25 tool requests use the strong model directly. An explicit `0.7` threshold exercises both tiers; it is not calibrated. Without that flag, the adapter follows the deployed shadow policy and selects the strong model.
+The 75 text requests are eligible for classification by your configured Laya service. The 25 tool requests use the strong model directly. An explicit `0.7` threshold can exercise both tiers; it is not calibrated. Without that flag or configured experimental thresholds, the adapter follows the deployed shadow policy and selects the strong model.
 
 Defaults are four concurrent generations, serialized classification, a 30-second local CPU deadline (750 ms for remote clients by default), and 2,048 output tokens per provider attempt (including reasoning). You can change the generation limits and results path:
 
@@ -133,7 +135,7 @@ Defaults are four concurrent generations, serialized classification, a 30-second
 docker compose exec laya tern demo --live --experimental-threshold 0.7 --max-tokens 2048 --concurrency 4 --output artifacts/my-live-run.json
 ```
 
-OpenRouter generations are paid; local classification has no API charge. GCP charges apply only if you choose cloud hosting. A retryable economy error can cause one additional strong-model attempt. Each attempt has a 120-second generation deadline. The runner records failures and continues through the batch; it does not automatically replay a failed run.
+Hosted provider generations may be billed; local classification has no API charge. GCP charges apply only if you choose cloud hosting. A retryable economy error can cause one additional strong-model attempt. Each attempt has a 120-second generation deadline by default, configurable per provider. The runner records failures and continues through the batch; it does not automatically replay a failed run. Reported cost totals cover only attempts returning cost information; missing costs are counted separately.
 
 Progress and a JSON checkpoint are written as requests finish. By default, each invocation creates a new timestamped file. An existing `--output` file is never overwritten. An interrupted request may have been billed even if no result was received, so do not assume pending/running rows are safe to replay.
 
@@ -165,7 +167,7 @@ See the [recorded 100-request run](live-results.md) for actual results, costs an
 | Setup is still waiting | Run `docker compose logs -f laya`; the first run downloads about 0.84 GB of weights and warms the model |
 | Port 8080 is occupied | Set `TERN_PORT=8081` in `.env`, rerun Compose, and use that port for host clients |
 | CPU routing times out | CPU inference can take tens of seconds. Prefer native Metal or supported NVIDIA hardware; adjust both the client deadline and server inference budget if needed |
-| No OpenRouter key | `route` still works; `chat` and `demo --live` need `OPENROUTER_API_KEY` |
+| No generation key | `route` still works; use `OPENROUTER_API_KEY` or configure providers with `TERN_CONFIG` |
 | Every selected tier is strong | Expected in shadow mode; inspect `proposed_tier` and `probability_economy`, or explicitly set an experimental threshold when generating answers |
 | Native client still calls GCP | Existing `.env`/shell settings take precedence. Change `LAYA_ENDPOINT` to `http://127.0.0.1:8080` and `LAYA_AUTH` to `auto` |
 | Answer is cut off | Increase `--max-tokens`; reasoning consumes part of the output budget |

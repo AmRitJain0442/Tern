@@ -1,8 +1,10 @@
-# Laya → OpenRouter adapter
+# Laya routing adapter
 
 The Python adapter calls a local or hosted Laya service for a routing decision, maps its tier to a configured OpenRouter model, and returns a completion or asynchronous stream. Local Laya is the default. Start it with `docker compose up --build --wait`; the calling application does not need MLX installed. Cloud Run is optional.
 
 For a guided first run, use the [CLI quickstart](quickstart.md). A [runnable Python streaming example](../examples/stream.py) is also included.
+
+For the HTTP API or other model providers, see [provider configuration](providers.md). The historical `OpenRouterAdapter` class now accepts any completion provider implementing `complete` and `stream`. Use `ProviderPool(read_settings())` from `model_router.providers` in an async context, call `await pool.models()`, and pass that catalog and pool to the adapter. This shares `TERN_CONFIG` with the CLI and API, including separate credentials and model IDs per provider. Pass `settings.experimental_thresholds` explicitly when constructing a Python adapter if you want that policy. The examples below retain the direct OpenRouter integration.
 
 ## Run the live smoke test
 
