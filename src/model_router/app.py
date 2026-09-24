@@ -8,6 +8,7 @@ from time import perf_counter
 from fastapi import FastAPI
 
 from model_router.backend import BackendBusy, ContextOverflow, MLXBackend
+from model_router.gateway import Gateway, InProcessClassifier, install_gateway_routes
 from model_router.policy import (
     RouteRequest,
     RouteResponse,
@@ -16,11 +17,12 @@ from model_router.policy import (
     decide,
     preflight,
 )
+from model_router.providers import ProviderPool, read_settings
 
 logger = logging.getLogger(__name__)
 
 
-def create_app(backend_factory=MLXBackend, settings=None):
+def create_app(backend_factory=MLXBackend, settings=None, provider_pool_factory=None):
     config = settings or Settings(
         mode=os.environ.get("ROUTER_MODE", "shadow"),
         threshold=float(os.environ.get("ECONOMY_THRESHOLD", "0.9")),
@@ -32,7 +34,15 @@ def create_app(backend_factory=MLXBackend, settings=None):
         app.state.backend = backend_factory()
         # Readiness means both weights and a real forward pass succeeded.
         app.state.backend.predict("Rewrite: Hello, how are you?")
-        yield
+        factory = provider_pool_factory or (lambda: ProviderPool(read_settings()))
+        async with factory() as providers:
+            app.state.gateway = Gateway(
+                InProcessClassifier(route),
+                providers,
+                api_key=os.environ.get("TERN_API_KEY", "").strip() or None,
+                default_language=os.environ.get("TERN_DEFAULT_LANGUAGE", "unknown"),
+            )
+            yield
 
     app = FastAPI(title="Tern", lifespan=lifespan)
 
@@ -60,6 +70,7 @@ def create_app(backend_factory=MLXBackend, settings=None):
         response.router_ms = round((perf_counter() - started) * 1000, 3)
         return response
 
+    install_gateway_routes(app)
     return app
 
 

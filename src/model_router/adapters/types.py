@@ -1,24 +1,43 @@
 """Validated caller metadata and provider-independent routing results."""
 
-from typing import Any, Literal
+from collections.abc import AsyncIterator
+from typing import Any, Literal, Protocol
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
-from model_router.policy import Tier
+from model_router.policy import RouteRequest, RouteResponse, Tier
 
 Workload = Literal["chat", "coding", "business"]
+
+
+class StreamOptions(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    include_usage: bool = False
 
 
 class ChatRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
     messages: list[dict[str, Any]] = Field(min_length=1)
-    max_tokens: int = Field(default=512, gt=0)
+    max_tokens: int = Field(
+        default=512, gt=0, validation_alias=AliasChoices("max_tokens", "max_completion_tokens")
+    )
     temperature: float | None = Field(default=None, ge=0, le=2)
     tools: list[dict[str, Any]] | None = None
     tool_choice: str | dict[str, Any] | None = None
     response_format: dict[str, Any] | None = None
     seed: int | None = None
     stop: str | list[str] | None = None
+    stream_options: StreamOptions | None = None
+
+
+class DecisionClient(Protocol):
+    async def decide(self, request: RouteRequest) -> RouteResponse: ...
+
+
+class CompletionProvider(Protocol):
+    async def complete(self, model: str, request: ChatRequest) -> dict: ...
+
+    def stream(self, model: str, request: ChatRequest) -> AsyncIterator[dict]: ...
 
 
 class RoutingContext(BaseModel):
@@ -82,7 +101,7 @@ class DecisionUnavailable(RuntimeError):
 
 class ProviderError(RuntimeError):
     def __init__(self, status: int | None, *, retryable: bool = False, kind="provider_error"):
-        super().__init__(f"OpenRouter {kind} (status={status})")
+        super().__init__(f"Provider {kind} (status={status})")
         self.status = status
         self.retryable = retryable
         self.kind = kind

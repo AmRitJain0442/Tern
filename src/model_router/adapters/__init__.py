@@ -1,6 +1,7 @@
 """Public MLX GPU → OpenRouter adapter API."""
 
 from .auth import GcloudIDTokenProvider, GoogleIDTokenProvider
+from .compatible import OpenAICompatibleClient
 from .laya import LayaGPUClient
 from .openrouter import OpenRouterClient
 from .router import OpenRouterAdapter
@@ -24,6 +25,7 @@ __all__ = [
     "ModelSpec",
     "NoEligibleModel",
     "OpenRouterAdapter",
+    "OpenAICompatibleClient",
     "OpenRouterClient",
     "ProviderError",
     "RoutedChunk",

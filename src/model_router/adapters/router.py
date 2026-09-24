@@ -1,13 +1,13 @@
-"""Map GPU decisions to eligible OpenRouter models and dispatch bounded completions."""
+"""Map Laya decisions to eligible models and dispatch through a completion provider."""
 
 import math
 from contextlib import aclosing
 from time import perf_counter
 
-from model_router.adapters.laya import LayaGPUClient
-from model_router.adapters.openrouter import OpenRouterClient
 from model_router.adapters.types import (
     ChatRequest,
+    CompletionProvider,
+    DecisionClient,
     DecisionUnavailable,
     ModelDecision,
     ModelSpec,
@@ -43,7 +43,7 @@ def inspect_request(request: ChatRequest):
             raise ValueError("Unsupported message content")
         elif content is None and not message.get("tool_calls"):
             raise ValueError("Message content is required except for tool calls")
-    parameters = set(request.model_dump(exclude_none=True)) - {"messages"}
+    parameters = set(request.model_dump(exclude_none=True)) - {"messages", "stream_options"}
     if tools:
         parameters.add("tools")
     if request.response_format and request.response_format.get("type") == "json_schema":
@@ -52,13 +52,13 @@ def inspect_request(request: ChatRequest):
 
 
 class OpenRouterAdapter:
-    """Async adapter; caller owns and closes the shared Laya and OpenRouter clients."""
+    """Provider-independent routing; the original class name remains compatible."""
 
     def __init__(
         self,
         models: list[ModelSpec],
-        laya: LayaGPUClient,
-        provider: OpenRouterClient,
+        laya: DecisionClient,
+        provider: CompletionProvider,
         *,
         experimental_thresholds: dict[str, float] | None = None,
     ):
@@ -77,7 +77,7 @@ class OpenRouterAdapter:
 
     def _eligible(self, request, context):
         if context.requires_private_processing or context.required_region:
-            raise NoEligibleModel("Private or region-bound OpenRouter routing is not configured")
+            raise NoEligibleModel("Private or region-bound generation is not configured")
         modalities, parameters, tools = inspect_request(request)
         models = [
             m
