@@ -34,7 +34,7 @@ Changelog = "https://github.com/AmRitJain0442/tern/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 adapter = ["google-auth[requests]>=2.38,<3"]
-cli = ["google-auth[requests]>=2.38,<3", "rich>=13.9,<15", "python-dotenv>=1,<2"]
+cli = ["google-auth[requests]>=2.38,<3", "rich>=13.9,<16", "python-dotenv>=1,<2"]
 dev = ["pytest>=8,<10", "ruff>=0.12,<1"]
 mlx-cpu = ["mlx[cpu]==0.32.2; sys_platform == 'linux'", "laya-mlx @ git+https://github.com/mizorewww/laya-mlx.git@0a859518634112655cb97c745dbf04f5191aaf13"]
 mlx-cuda = ["mlx[cuda12]==0.32.2; sys_platform == 'linux'", "nvidia-cuda-runtime-cu12==12.9.79; sys_platform == 'linux'", "laya-mlx @ git+https://github.com/mizorewww/laya-mlx.git@0a859518634112655cb97c745dbf04f5191aaf13"]
