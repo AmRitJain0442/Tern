@@ -5,6 +5,8 @@
 !pyproject.toml
 !uv.lock
 !README.md
+!LICENSE
+!THIRD_PARTY_NOTICES.md
 !src/
 !src/**
 !scripts/

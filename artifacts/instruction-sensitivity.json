@@ -1,6 +1,6 @@
 {
   "kind": "matched_instruction_sensitivity_not_quality_evaluation",
-  "endpoint": "https://model-router-laya-gpu-635367932686.asia-southeast1.run.app",
+  "endpoint": "https://private-router.example.invalid",
   "rows": [
     {
       "base": "Rewrite this politely: Send me the invoice today.",
@@ -146,5 +146,11 @@
         "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
       }
     }
-  ]
+  ],
+  "public_redaction": {
+    "fields": [
+      "/endpoint"
+    ],
+    "reason": "Private infrastructure identifiers omitted; measurements and model revisions unchanged."
+  }
 }

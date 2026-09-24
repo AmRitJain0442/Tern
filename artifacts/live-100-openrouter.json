@@ -2,7 +2,7 @@
   "kind": "live_integration_run_with_synthetic_prompts_not_quality_evaluation",
   "created_at": "2026-09-23T15:16:01.606793+00:00",
   "status": "finished",
-  "endpoint": "https://model-router-laya-gpu-635367932686.asia-southeast1.run.app",
+  "endpoint": "https://private-router.example.invalid",
   "max_tokens_per_attempt": 2048,
   "generation_concurrency": 4,
   "classifier_concurrency": 1,
@@ -14572,5 +14572,11 @@
     "p95_request_ms": 16419.512000000395
   },
   "batch_elapsed_ms": 95117.51139999978,
-  "finished_at": "2026-09-23T15:18:23.735194+00:00"
+  "finished_at": "2026-09-23T15:18:23.735194+00:00",
+  "public_redaction": {
+    "fields": [
+      "/endpoint"
+    ],
+    "reason": "Private infrastructure identifiers omitted; measurements and model revisions unchanged."
+  }
 }

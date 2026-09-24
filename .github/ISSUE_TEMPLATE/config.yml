@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security reporting
+    url: https://github.com/AmRitJain0442/tern/blob/main/SECURITY.md
+    about: Follow the private reporting instructions; never post credentials or exploit details in an issue.
+  - name: Setup and troubleshooting
+    url: https://github.com/AmRitJain0442/tern/blob/main/docs/quickstart.md
+    about: Local installation, model downloads, API setup and common fixes.

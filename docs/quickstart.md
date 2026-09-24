@@ -4,7 +4,7 @@ GCP is optional. Local Laya classification needs no API key. For downstream answ
 
 ## 1. One-command setup
 
-Clone the repository and enter it (the repository is currently private, so collaborator access is required):
+Clone the repository and enter it:
 
 ```sh
 git clone https://github.com/AmRitJain0442/tern.git

@@ -1,7 +1,7 @@
 {
   "kind": "sequential_synthetic_hosting_probe_not_quality_evaluation",
   "created_at": "2026-09-23T13:02:31.305896+00:00",
-  "endpoint": "https://model-router-laya-635367932686.asia-south1.run.app",
+  "endpoint": "https://private-router.example.invalid",
   "anonymous_status": 403,
   "first_health_ms": 39.66450000007171,
   "first_health_is_proven_cold_start": false,
@@ -392,5 +392,11 @@
     }
   ],
   "median_client_ms": 26449.25579999972,
-  "constraints_passed": true
+  "constraints_passed": true,
+  "public_redaction": {
+    "fields": [
+      "/endpoint"
+    ],
+    "reason": "Private infrastructure identifiers omitted; measurements and model revisions unchanged."
+  }
 }
