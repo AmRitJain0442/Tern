@@ -22,6 +22,7 @@ from model_router.adapters.laya import LOCAL_ENDPOINT
 from model_router.adapters.types import DecisionUnavailable
 from model_router.connection import connection_settings
 from model_router.policy import RouteRequest
+from model_router.providers import ProviderPool, read_settings
 
 ECONOMY = "google/gemini-2.5-flash-lite"
 STRONG = "google/gemini-2.5-pro"
@@ -156,15 +157,20 @@ def init_config(path, console):
 
 def local_checks(auth):
     _, auth, _ = connection_settings(auth)
+    configured = read_settings() is not None
     key_ok = bool(os.environ.get("OPENROUTER_API_KEY", "").strip())
     auth_ok = auth in {"local", "google"} or bool(
         shutil.which("gcloud.cmd") or shutil.which("gcloud")
     )
     return [
         (
-            "OpenRouter credential",
+            "Generation provider" if configured else "OpenRouter credential",
             True,
-            "present (value hidden)" if key_ok else "optional; add OPENROUTER_API_KEY for chat",
+            "TERN_CONFIG loaded; credential presence checked by --live"
+            if configured
+            else "present (value hidden)"
+            if key_ok
+            else "optional; add OPENROUTER_API_KEY for chat",
         ),
         (
             "Laya endpoint",
@@ -193,6 +199,11 @@ def make_laya(args):
 async def doctor_live(args):
     async with make_laya(args) as laya:
         await laya.warmup()
+    settings = read_settings()
+    if settings:
+        async with ProviderPool(settings) as providers:
+            await providers.models()
+        return
     key = os.environ.get("OPENROUTER_API_KEY", "").strip()
     if key:
         async with OpenRouterClient(key) as provider:
@@ -211,6 +222,9 @@ def serve(args, console):
     """First startup downloads the pinned checkpoint; later starts reuse the HF cache."""
     if not 1 <= args.port <= 65535:
         raise ValueError("Port must be 1..65535")
+    from dotenv import load_dotenv
+
+    load_dotenv(args.env_file, override=False)
     os.environ.setdefault("OPENBLAS_NUM_THREADS", "2")
     os.environ.setdefault("OMP_NUM_THREADS", "2")
     try:
@@ -246,12 +260,17 @@ def assignments():
 
 async def chat(args, console):
     key = os.environ.get("OPENROUTER_API_KEY", "").strip()
-    if not key:
-        raise ValueError("Set OPENROUTER_API_KEY in .env, then run tern doctor")
+    settings = read_settings()
+    if not key and settings is None:
+        raise ValueError("Set OPENROUTER_API_KEY or TERN_CONFIG, then run tern doctor")
     if args.input_tokens is None and len(args.prompt.encode("utf-8")) > 4096:
         raise ValueError("For long prompts supply --input-tokens with a conservative token bound")
     thresholds = (
-        {args.workload: args.experimental_threshold} if args.experimental_threshold else None
+        {args.workload: args.experimental_threshold}
+        if args.experimental_threshold
+        else settings.experimental_thresholds
+        if settings
+        else None
     )
     context = RoutingContext(
         input_tokens=args.input_tokens or 8192, language=args.language, workload=args.workload
@@ -259,13 +278,13 @@ async def chat(args, console):
     request = ChatRequest(
         messages=[{"role": "user", "content": args.prompt}], max_tokens=args.max_tokens
     )
-    async with make_laya(args) as laya, OpenRouterClient(key) as provider:
+    async with make_laya(args) as laya, ProviderPool(settings) as provider:
         if not args.json:
-            heading(console, "LIVE  ·  Laya routing + OpenRouter")
+            heading(console, "LIVE  ·  Laya routing + configured providers")
             console.print("  [muted]Checking Laya readiness...[/]")
         await laya.warmup()
         router = OpenRouterAdapter(
-            await provider.models(assignments()), laya, provider, experimental_thresholds=thresholds
+            await provider.models(), laya, provider, experimental_thresholds=thresholds
         )
         if args.stream:
             first = True
@@ -325,10 +344,10 @@ def parser():
     results = commands.add_parser("results", help="view saved live-run tags without API calls")
     results.add_argument("path", type=Path, help="saved live-run JSON file")
     demo = commands.add_parser(
-        "demo", help="route 100 requests offline, or use --live for real GPU/OpenRouter calls"
+        "demo", help="route 100 requests offline, or use --live for real Laya/provider calls"
     )
     demo.add_argument(
-        "--live", action="store_true", help="make 100 paid requests through GCP and OpenRouter"
+        "--live", action="store_true", help="make 100 real requests through configured providers"
     )
     demo.add_argument(
         "--output", type=Path, help="live results file (default: timestamped file in artifacts/)"
@@ -369,7 +388,7 @@ def parser():
     )
     doctor.add_argument("--auth", choices=["auto", "local", "gcloud", "google"], default="auto")
     live = commands.add_parser(
-        "chat", help="route one prompt through your GPU service and OpenRouter (paid)"
+        "chat", help="route one prompt through Laya and your configured generation providers"
     )
     live.add_argument("prompt", help="one text prompt; quote it in your shell")
     live.add_argument("--auth", choices=["auto", "local", "gcloud", "google"], default="auto")
@@ -481,10 +500,14 @@ def main(argv=None, *, console=None):
                 return 1
             if args.live:
                 console.print(
-                    "\n  [muted]Checking Laya; checking OpenRouter only if a key is configured...[/]"
+                    "\n  [muted]Checking Laya and optional generation provider setup...[/]"
                 )
                 asyncio.run(doctor_live(args))
-                console.print("  [good]Live connectivity checks passed.[/]")
+                console.print("  [good]Laya ready; provider setup checked.[/]")
+                if os.environ.get("TERN_CONFIG"):
+                    console.print(
+                        "  [muted]Custom provider connectivity is verified by a chat request.[/]"
+                    )
             else:
                 console.print(
                     "\n  [muted]Local checks only. Run tern doctor --live to verify access.[/]"

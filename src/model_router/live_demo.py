@@ -1,4 +1,4 @@
-"""A real, checkpointed 100-request GPU/OpenRouter integration run."""
+"""A real, checkpointed 100-request Laya/provider integration run."""
 
 import asyncio
 import json
@@ -20,6 +20,7 @@ from model_router.adapters import (
 )
 from model_router.connection import connection_settings
 from model_router.demo import EXPECTED_TAGS, demo_cases
+from model_router.providers import ProviderPool, read_settings
 
 CURRENT_ROW = ContextVar("live_demo_row", default=None)
 
@@ -90,10 +91,13 @@ class RecordedLaya(LayaGPUClient):
             return result
 
 
-class RecordedProvider(OpenRouterClient):
+class RecordingProvider:
+    def attempt_info(self, model):
+        return {"model": model, "provider_type": "openrouter"}
+
     async def complete(self, model, request):
         row = CURRENT_ROW.get()
-        attempt = {"model": model}
+        attempt = self.attempt_info(model)
         if row is not None:
             row["provider_attempts"].append(attempt)
         try:
@@ -104,6 +108,24 @@ class RecordedProvider(OpenRouterClient):
         except ProviderError as exc:
             attempt.update(status="failed", error_kind=exc.kind, http_status=exc.status)
             raise
+
+
+class RecordedProvider(RecordingProvider, OpenRouterClient):
+    pass
+
+
+class RecordedPool(RecordingProvider, ProviderPool):
+    async def models(self, assignments=None):
+        return await super().models()
+
+    def attempt_info(self, model):
+        target = next(m for m in self.settings.models if m.id == model)
+        return {
+            "model": model,
+            "upstream_model": target.upstream_model,
+            "provider": target.provider,
+            "provider_type": self.settings.providers[target.provider].type,
+        }
 
 
 class RecordedAdapter(OpenRouterAdapter):
@@ -148,7 +170,16 @@ def summarize(rows):
         else None,
         "tool_calls_valid": sum(row.get("tool_call_valid", False) for row in completed),
         "provider_attempts": len(attempts),
-        "reported_openrouter_cost_usd": round(sum(known_costs), 9),
+        "reported_provider_cost_usd": round(sum(known_costs), 9),
+        "reported_openrouter_cost_usd": round(
+            sum(
+                a.get("usage", {}).get("cost", 0)
+                for a in attempts
+                if a.get("provider_type", "openrouter") == "openrouter"
+                and isinstance(a.get("usage", {}).get("cost"), (int, float))
+            ),
+            9,
+        ),
         "attempts_without_cost": len(attempts) - len(known_costs),
         "median_request_ms": statistics.median(latencies) if latencies else None,
         "p95_request_ms": latencies[max(0, (95 * len(latencies) + 99) // 100 - 1)]
@@ -196,15 +227,16 @@ async def run_live_demo(
     progress=print,
 ):
     key = os.environ.get("OPENROUTER_API_KEY", "").strip()
-    if not key:
-        raise ValueError("Set OPENROUTER_API_KEY in .env before running a live demo")
+    settings = read_settings()
+    if not key and settings is None:
+        raise ValueError("Set OPENROUTER_API_KEY or TERN_CONFIG before running a live demo")
     if not 1 <= concurrency <= 8 or max_tokens <= 0:
         raise ValueError("Concurrency must be 1..8 and max_tokens must be positive")
     assignments = {
         os.environ.get("OPENROUTER_ECONOMY_MODEL", "google/gemini-2.5-flash-lite"): "economy",
         os.environ.get("OPENROUTER_STRONG_MODEL", "google/gemini-2.5-pro"): "strong",
     }
-    if len(assignments) != 2:
+    if len(assignments) != 2 and settings is None:
         raise ValueError("Economy and strong models must differ")
     cases = live_cases(max_tokens)
     endpoint, _, connection = connection_settings(auth)
@@ -264,9 +296,10 @@ async def run_live_demo(
                 report["endpoint"],
                 **connection,
             ) as laya,
-            RecordedProvider(key, timeout=120) as provider,
+            RecordedPool(settings) if settings else RecordedProvider(key, timeout=120) as provider,
         ):
-            await provider.check_credentials()
+            if settings is None:
+                await provider.check_credentials()
             models = await provider.models(assignments)
             started = perf_counter()
             progress("Checking Laya readiness...")
@@ -276,6 +309,8 @@ async def run_live_demo(
             thresholds = (
                 {w: experimental_threshold for w in ("chat", "coding", "business")}
                 if experimental_threshold is not None
+                else settings.experimental_thresholds
+                if settings
                 else None
             )
             adapter = RecordedAdapter(models, laya, provider, experimental_thresholds=thresholds)
@@ -319,7 +354,7 @@ async def run_live_demo(
                         f"{summary['requests_finished']:3}/100 {row['id']:3}  {row['category']:9}  "
                         f"{row['true_tag'] or 'unknown':10} {row['output_tag'] or 'unknown':10} "
                         f"{row['status']:9}  {row['elapsed_ms'] / 1000:5.1f}s  "
-                        f"reported cost ${summary['reported_openrouter_cost_usd']:.4f}"
+                        f"reported cost ${summary['reported_provider_cost_usd']:.4f}"
                     )
 
             await asyncio.gather(

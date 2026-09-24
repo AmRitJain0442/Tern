@@ -25,13 +25,37 @@ def test_live_fixtures_are_100_unique_prompts_without_offline_answers():
     )
 
 
-def test_live_runner_checkpoints_real_adapter_outcomes_with_mock_transports(tmp_path, monkeypatch):
+@pytest.mark.parametrize("configured", [False, True])
+def test_live_runner_checkpoints_real_adapter_outcomes_with_mock_transports(
+    tmp_path, monkeypatch, configured
+):
     original_cases = live_demo.live_cases
     monkeypatch.setattr(live_demo, "live_cases", lambda max_tokens: original_cases(max_tokens)[:4])
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-only-secret")
     monkeypatch.setenv("OPENROUTER_ECONOMY_MODEL", "economy")
     monkeypatch.setenv("OPENROUTER_STRONG_MODEL", "strong")
     monkeypatch.setenv("LAYA_ENDPOINT", "https://laya.example")
+    monkeypatch.delenv("TERN_CONFIG", raising=False)
+    if configured:
+        config = {
+            "providers": {"custom": {"base_url": "https://custom.example/v1"}},
+            "models": [
+                {
+                    "id": tier,
+                    "tier": tier,
+                    "provider": "custom",
+                    "upstream_model": tier,
+                    "context_length": 32768,
+                    "max_output_tokens": 4096,
+                    "supported_parameters": ["max_tokens", "tools", "tool_choice"],
+                }
+                for tier in ("economy", "strong")
+            ],
+        }
+        config_path = tmp_path / "providers.json"
+        config_path.write_text(json.dumps(config))
+        monkeypatch.setenv("TERN_CONFIG", str(config_path))
+        monkeypatch.delenv("OPENROUTER_API_KEY")
 
     async def token():
         return "test-only-identity"
@@ -53,6 +77,11 @@ def test_live_runner_checkpoints_real_adapter_outcomes_with_mock_transports(tmp_
         )
 
     def provider(request):
+        if configured:
+            assert request.url.host == "custom.example"
+            assert request.url.path == "/v1/chat/completions"
+            assert "authorization" not in request.headers
+            assert "provider" not in json.loads(request.content)
         if request.url.path.endswith("/key"):
             return httpx.Response(200, json={"data": {}})
         if request.url.path.endswith("/models"):
@@ -105,8 +134,13 @@ def test_live_runner_checkpoints_real_adapter_outcomes_with_mock_transports(tmp_
         def __init__(self, key, **kwargs):
             super().__init__(key, transport=httpx.MockTransport(provider))
 
+    class TestPool(live_demo.RecordedPool):
+        def __init__(self, settings):
+            super().__init__(settings, transport_factory=lambda name: httpx.MockTransport(provider))
+
     monkeypatch.setattr(live_demo, "RecordedLaya", TestLaya)
     monkeypatch.setattr(live_demo, "RecordedProvider", TestProvider)
+    monkeypatch.setattr(live_demo, "RecordedPool", TestPool)
     path = tmp_path / "run.json"
     updates = []
 
@@ -125,7 +159,8 @@ def test_live_runner_checkpoints_real_adapter_outcomes_with_mock_transports(tmp_
     assert report["status"] == "finished"
     assert report["summary"]["completed"] == 3
     assert report["summary"]["failed"] == 1
-    assert report["summary"]["reported_openrouter_cost_usd"] == 0.03
+    assert report["summary"]["reported_provider_cost_usd"] == 0.03
+    assert report["summary"]["reported_openrouter_cost_usd"] == (0 if configured else 0.03)
     assert report["summary"]["attempts_without_cost"] == 1
     assert report["summary"]["tool_calls_valid"] == 1
     assert report["summary"]["successful_classifier_calls"] == 3

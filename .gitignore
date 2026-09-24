@@ -12,6 +12,7 @@ models/
 *.pt
 *.onnx
 artifacts/private/
+config/providers.json
 dist/
 build/
 *.log
