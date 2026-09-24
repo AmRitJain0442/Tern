@@ -1,4 +1,4 @@
-FROM python:3.12-slim-bookworm
+FROM python:3.14-slim-bookworm
 RUN apt-get update && apt-get install -y --no-install-recommends git libopenblas0 liblapack3 \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcr.io/astral-sh/uv:0.7.13 /uv /usr/local/bin/uv
