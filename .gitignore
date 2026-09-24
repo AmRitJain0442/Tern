@@ -12,6 +12,15 @@ models/
 *.pt
 *.onnx
 artifacts/private/
+# Generated reports may contain prompts/responses. Curated evidence is already tracked.
+artifacts/*.json
+local-results/
+credentials*.json
+service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
 config/providers.json
 dist/
 build/

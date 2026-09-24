@@ -45,7 +45,7 @@ The existing output file is protected from overwriting; omit `--output` for a fr
 
 - Economy model: `google/gemini-2.5-flash-lite`.
 - Strong model: `google/gemini-2.5-pro`.
-- GPU endpoint: the existing private `model-router-laya-gpu` service in `tribe-v2-host`, `asia-southeast1`.
+- GPU endpoint: a private maintainer-owned Cloud Run L4 service in `asia-southeast1`; its URL and project identifier are redacted from the public report.
 - Checkpoint: `aac6fef/laya-mlx`, revision `20aed815fc6acde75733882e7ec0e3f28aeb9717`.
 - GPU service remained in shadow mode; the adapter explicitly applied the experimental threshold.
 - Four concurrent generations; classifier calls serialized to the single GPU instance.

@@ -1,5 +1,5 @@
 param(
-    [string]$Project = 'tribe-v2-host',
+    [Parameter(Mandatory = $true)][ValidateNotNullOrEmpty()][string]$Project,
     [string]$Region = 'asia-south1',
     [string]$Service = 'model-router-laya',
     [Parameter(Mandatory = $true)][string]$Image

@@ -6,7 +6,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/AmRitJain0442/tern/actions/workflows/check.yml"><img src="https://img.shields.io/badge/CI-GitHub_Actions-9dd6ae?style=flat&labelColor=303840" alt="View GitHub Actions checks"></a>
+  <a href="https://github.com/AmRitJain0442/tern/actions/workflows/check.yml"><img src="https://github.com/AmRitJain0442/tern/actions/workflows/check.yml/badge.svg" alt="GitHub Actions check status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-9dd6ae?labelColor=303840" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-171b20?style=flat&labelColor=303840&color=d97732" alt="Python 3.11 or later">
   <img src="https://img.shields.io/badge/status-experimental-d97732?style=flat&labelColor=303840" alt="Experimental">
 </p>
@@ -30,7 +31,7 @@ Run real Laya locally with one setup command. No GCP account or API key is neede
 
 ## Start locally
 
-Requires Git and a running Docker installation with Compose 2.24 or later. The repository currently requires collaborator access.
+Requires Git and a running Docker installation with Compose 2.24 or later.
 
 ```sh
 git clone https://github.com/AmRitJain0442/tern.git
@@ -164,7 +165,13 @@ uv run pytest -q
 uv run ruff check src tests scripts examples
 ```
 
-Tests run without cloud credentials or inference hardware. CI checks every push and pull request. Live tests are explicit and separate. Project code is under [`src/model_router`](src/model_router); [issues](https://github.com/AmRitJain0442/tern/issues) and focused pull requests are welcome from collaborators.
+Tests run without cloud credentials or inference hardware. CI checks every push and pull request. Live tests are explicit and separate. Project code is under [`src/model_router`](src/model_router); [issues](https://github.com/AmRitJain0442/tern/issues) and focused pull requests are welcome. See the [contributing guide](CONTRIBUTING.md) and [community conduct](CODE_OF_CONDUCT.md).
+
+## License and acknowledgments
+
+Tern's original code and documentation use the [MIT License](LICENSE). Laya's model and runtime retain their Apache-2.0 license; other dependencies retain their own terms. Setup downloads model files separately and preserves their notices. See [third-party attribution](THIRD_PARTY_NOTICES.md).
+
+This is an experimental release. The documented clone-based setup is the supported installation path; a PyPI release is not implied. Provider compatibility follows the [documented Chat Completions subset](docs/providers.md#request-and-streaming-behavior), and only the recorded OpenRouter integrations have been live-verified.
 
 ---
 

@@ -18,7 +18,7 @@ The two runtimes can therefore agree on these outputs while performing very diff
 
 ## MLX CUDA on Cloud Run L4
 
-The exact MLX checkpoint is hosted on a private L4 service in `asia-southeast1`, with float16, 4 vCPU, 16 GiB, concurrency one, minimum zero, and maximum one. Sixty sequential calls (ten per synthetic prompt) produced these results:
+The exact MLX checkpoint was measured on a private L4 service in `asia-southeast1`, with float16, 4 vCPU, 16 GiB, concurrency one, minimum zero, and maximum one. Sixty sequential calls (ten per synthetic prompt) produced these results:
 
 | Measurement | Median | p95 | Samples |
 |---|---:|---:|---:|
@@ -51,7 +51,7 @@ At a naive 0.5 threshold, requesting economy flips the last two classifications.
 
 Use MLX CUDA on L4 for this hosted feasibility prototype. Reject the measured MLX CPU path; retain PyTorch CPU as a cheaper low-volume candidate to benchmark on GCP. Keep routing in shadow mode, then learn/calibrate separate policies for the workload families. For low traffic, a 31-second initialization cost and GPU idle allocation may outweigh fast warm inference. For sustained traffic, compare batching, bounded length buckets, and a colocated caller before choosing the production deployment.
 
-The obsolete CPU service was removed after its baseline was recorded; the private GPU service remains available. Its existence does not establish production cost savings. No downstream LLM calls were made by these experiments.
+The obsolete CPU service was removed after its baseline was recorded; the private GPU service was retained at the time of measurement. It is not a public endpoint or a promised service. Its existence does not establish production cost savings. No downstream LLM calls were made by these experiments.
 
 ## Question and probability behavior
 

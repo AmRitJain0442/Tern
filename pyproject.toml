@@ -5,9 +5,21 @@ build-backend = "hatchling.build"
 [project]
 name = "tern-router"
 version = "0.1.0"
-description = "GPU-assisted LLM routing with conservative policies and OpenRouter dispatch"
+description = "Local Laya model routing, conservative policies, and a configurable Chat Completions API"
 readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+authors = [{name = "AmRitJain0442 and Tern contributors"}]
+maintainers = [{name = "AmRitJain0442"}]
+keywords = ["llm", "model-routing", "laya", "mlx", "openrouter", "inference"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "httpx>=0.28,<1"]
 
 [project.scripts]
@@ -18,6 +30,7 @@ model-router = "model_router.cli:main"
 Repository = "https://github.com/AmRitJain0442/tern"
 Documentation = "https://github.com/AmRitJain0442/tern/blob/main/docs/quickstart.md"
 Issues = "https://github.com/AmRitJain0442/tern/issues"
+Changelog = "https://github.com/AmRitJain0442/tern/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 adapter = ["google-auth[requests]>=2.38,<3"]
@@ -32,6 +45,21 @@ conflicts = [[{extra = "mlx-cpu"}, {extra = "mlx-cuda"}, {extra = "mlx-metal"}]]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/model_router"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src", "/tests", "/scripts", "/docs", "/.github", "/examples", "/config/*.example.json",
+    "/artifacts/README.md", "/artifacts/cloud-mlx-cpu.json", "/artifacts/cloud-mlx-gpu.json",
+    "/artifacts/deployment.json", "/artifacts/gateway-smoke.json",
+    "/artifacts/instruction-sensitivity.json", "/artifacts/live-100-openrouter.json",
+    "/artifacts/local-mlx-cpu.json", "/artifacts/local-setup-smoke.json",
+    "/artifacts/local-torch-cpu.json", "/artifacts/openrouter-adapter-smoke.json",
+    "/artifacts/summary.json",
+    "/README.md", "/LICENSE", "/THIRD_PARTY_NOTICES.md", "/CHANGELOG.md",
+    "/CONTRIBUTING.md", "/SECURITY.md", "/CODE_OF_CONDUCT.md",
+    "/pyproject.toml", "/uv.lock", "/.env.example", "/.dockerignore", "/.gitignore",
+    "/.gitleaks.toml", "/Dockerfile*", "/compose*.yaml", "/cloudbuild*.yaml",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true
