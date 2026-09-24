@@ -141,7 +141,7 @@ Private-processing and region-bound requests are rejected unless an appropriate 
 
 These are small feasibility probes, not production SLAs or savings claims. Startup took tens of seconds. GPU and networking costs are excluded from the OpenRouter figure; two Pro smoke answers were truncated by their token limit. Thresholds still need workload-specific quality calibration.
 
-[Benchmark methodology](docs/findings.md) · [Raw GPU results](artifacts/cloud-mlx-gpu.json) · [Live adapter results](artifacts/openrouter-adapter-smoke.json)
+[Benchmark methodology](docs/findings.md) · [Raw GPU results](artifacts/cloud-mlx-gpu.json) · [Live adapter results](artifacts/openrouter-adapter-smoke.json) · [Live HTTP API check](docs/providers.md#recorded-live-api-check)
 
 ## Go deeper
 

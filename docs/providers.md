@@ -121,3 +121,15 @@ For streaming, set `"stream": true`; optionally add `"stream_options": {"include
 An explicit retryable economy failure can trigger one strong attempt, including across providers. Timeouts are not blindly replayed. Once output starts, a stream failure emits a sanitized error event, closes the upstream connection and omits `[DONE]`; it never retries generated output. Failures before streaming begins return an HTTP error response.
 
 Tests cover cross-provider credential isolation, fallback, payload preservation, streaming errors/disconnects, custom provider CLI/live-demo use, and key/header/token-parameter configuration using mock transports. Those checks establish transport behavior, not downstream model quality or universal vendor compatibility.
+
+## Recorded live API check
+
+The [recorded API smoke run](../artifacts/gateway-smoke.json) used real Laya on the local Docker CPU runtime and OpenRouter for two generations: a text completion and a streamed, forced weather tool call. It verified model discovery, bearer-key rejection, actual Laya probability output, routing headers, tool arguments, usage chunks and stream completion. The tool was not executed. Provider-reported cost was **$0.0176525**, excluding local compute; this is an integration check, not a quality or latency benchmark. Other vendor integrations have not been live-verified.
+
+To repeat the paid check against your running server, install the CLI dependencies with `uv sync --extra cli`, then use a new output filename:
+
+```sh
+uv run --no-sync python scripts/smoke_gateway.py --output artifacts/my-api-smoke.json
+```
+
+The script reads `TERN_API_KEY` from the environment or `.env`, caps each generation at 2,048 output tokens, checkpoints responses, and refuses to overwrite an existing report. It expects English text classification and a strong model supporting forced tools and streamed usage; use the OpenRouter example configuration for the recorded setup.

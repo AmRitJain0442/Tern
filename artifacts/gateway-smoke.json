@@ -1,0 +1,358 @@
+{
+  "kind": "live_tern_api_integration_not_quality_evaluation",
+  "created_at": "2026-09-24T09:31:04.380435+00:00",
+  "status": "passed",
+  "output_token_cap_per_attempt": 2048,
+  "rows": [
+    {
+      "case": "text_completion",
+      "request": {
+        "model": "tern/auto",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Rewrite politely: send the report."
+          }
+        ],
+        "max_tokens": 2048,
+        "routing": {
+          "input_tokens": 256,
+          "language": "en"
+        }
+      },
+      "response": {
+        "id": "gen-1790242291-87d0IOwNRHfOZIfLGIgs",
+        "object": "chat.completion",
+        "created": 1790242291,
+        "model": "google/gemini-2.5-pro",
+        "provider": "Google",
+        "system_fingerprint": null,
+        "service_tier": "default",
+        "choices": [
+          {
+            "index": 0,
+            "logprobs": null,
+            "finish_reason": "stop",
+            "native_finish_reason": "STOP",
+            "message": {
+              "role": "assistant",
+              "content": "Of course. The best option depends on your relationship with the person and the context (e.g., a quick chat vs. a formal email).\n\nHere are several polite ways to ask, from casual to more formal:\n\n### **Short and Simple (for chat or a quick email)**\n*   Could you send the report when you have a chance?\n*   Please send me the report when you can.\n*   Could you send over the report? Thanks!\n\n### **Standard Professional (for most emails)**\n*   Could you please send me the report when you have a moment?\n*   I would appreciate it if you could send the report.\n*   When it's convenient, please send me the report.\n\n### **More Formal (for clients or senior management)**\n*   Would it be possible for you to send the report?\n*   Could you please send the report at your earliest convenience?\n*   I would be grateful if you could send over the report.\n\n### **When it's urgent (polite but firm)**\n*   Could you please send the report today? I need it for the [Project Name] meeting tomorrow morning.\n*   I'll need the report by 3 PM to finalize my review. Could you please ensure it's sent by then?\n\n### **As a gentle reminder**\n*   Just following up on the report. Could you please send it over when you have a free moment?\n*   Hi [Name], just a gentle reminder about the report. Thanks",
+              "refusal": null,
+              "reasoning": "**Refining communication clarity**\n\nI'm currently exploring how to rephrase simple instructions to convey more nuanced intent. My focus is on transitioning from direct commands to more collaborative or informative phrasing, considering the recipient's perspective and the broader context of the task.\n\n**Developing polite requests**\n\nI'm focusing on transforming abrupt commands into softer, more considerate requests. My current emphasis is on incorporating politeness markers and contextual explanations to improve collaborative interactions.\n\n**Crafting polite phrasing**\n\nI'm currently refining ways to transform direct commands into more considerate requests. My focus is on embedding politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Improving directness**\n\nI am currently working on softening direct commands into more considerate requests. My focus involves exploring various polite phrasing techniques to foster better collaborative interactions and acknowledge recipient perspective.\n\n**Refining direct commands**\n\nI am now considering how to pivot from straightforward directives to more nuanced requests. My current exploration focuses on integrating subtle phrasing that encourages cooperation and acknowledges the recipient's perspective without being demanding.\n\n**Transforming commands into requests**\n\nI'm currently working on transforming abrupt commands into more considerate requests. My focus is on incorporating politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Enhancing polite phrasing**\n\nI'm refining ways to transform direct commands into more considerate requests. My focus is on embedding politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Softening direct commands**\n\nI am currently working on softening direct commands into more considerate requests. My focus involves exploring various polite phrasing techniques to foster better collaborative interactions and acknowledge recipient perspective.\n\n**Developing collaborative requests**\n\nI am focusing on transforming direct commands into collaborative requests. My current effort involves exploring ways to phrase instructions that encourage cooperation and acknowledge the recipient's role.\n\n**Refining Phrasing Techniques**\n\nI am currently exploring how to pivot from direct commands to more considerate requests. My focus is on integrating subtle phrasing that encourages cooperation and acknowledges the recipient's perspective without being demanding.\n\n**Generating Polite Alternatives**\n\nI'm focusing on transforming abrupt commands into more considerate requests. My current emphasis is on incorporating politeness markers and contextual explanations to improve collaborative interactions.\n\n**Enhancing Collaborative Communication**\n\nI am focusing on transforming direct commands into collaborative requests. My current effort involves exploring ways to phrase instructions that encourage cooperation and acknowledge the recipient's role.\n\n**Developing Nuanced Instructions**\n\nI'm refining ways to transform direct commands into more considerate requests. My focus is on embedding politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Improving Request Formulations**\n\nI am currently working on softening direct commands into more considerate requests. My focus involves exploring various polite phrasing techniques to foster better collaborative interactions and acknowledge recipient perspective.\n\n**Adapting Command Language**\n\nI'm currently working on transforming abrupt commands into more considerate requests. My focus is on incorporating politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Crafting Collaborative Directives**\n\nI am now considering how to pivot from straightforward directives to more nuanced requests. My current exploration focuses on integrating subtle phrasing that encourages cooperation and acknowledges the recipient's perspective without being demanding.\n\n",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "**Refining communication clarity**\n\nI'm currently exploring how to rephrase simple instructions to convey more nuanced intent. My focus is on transitioning from direct commands to more collaborative or informative phrasing, considering the recipient's perspective and the broader context of the task.\n\n**Developing polite requests**\n\nI'm focusing on transforming abrupt commands into softer, more considerate requests. My current emphasis is on incorporating politeness markers and contextual explanations to improve collaborative interactions.\n\n**Crafting polite phrasing**\n\nI'm currently refining ways to transform direct commands into more considerate requests. My focus is on embedding politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Improving directness**\n\nI am currently working on softening direct commands into more considerate requests. My focus involves exploring various polite phrasing techniques to foster better collaborative interactions and acknowledge recipient perspective.\n\n**Refining direct commands**\n\nI am now considering how to pivot from straightforward directives to more nuanced requests. My current exploration focuses on integrating subtle phrasing that encourages cooperation and acknowledges the recipient's perspective without being demanding.\n\n**Transforming commands into requests**\n\nI'm currently working on transforming abrupt commands into more considerate requests. My focus is on incorporating politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Enhancing polite phrasing**\n\nI'm refining ways to transform direct commands into more considerate requests. My focus is on embedding politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Softening direct commands**\n\nI am currently working on softening direct commands into more considerate requests. My focus involves exploring various polite phrasing techniques to foster better collaborative interactions and acknowledge recipient perspective.\n\n**Developing collaborative requests**\n\nI am focusing on transforming direct commands into collaborative requests. My current effort involves exploring ways to phrase instructions that encourage cooperation and acknowledge the recipient's role.\n\n**Refining Phrasing Techniques**\n\nI am currently exploring how to pivot from direct commands to more considerate requests. My focus is on integrating subtle phrasing that encourages cooperation and acknowledges the recipient's perspective without being demanding.\n\n**Generating Polite Alternatives**\n\nI'm focusing on transforming abrupt commands into more considerate requests. My current emphasis is on incorporating politeness markers and contextual explanations to improve collaborative interactions.\n\n**Enhancing Collaborative Communication**\n\nI am focusing on transforming direct commands into collaborative requests. My current effort involves exploring ways to phrase instructions that encourage cooperation and acknowledge the recipient's role.\n\n**Developing Nuanced Instructions**\n\nI'm refining ways to transform direct commands into more considerate requests. My focus is on embedding politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Improving Request Formulations**\n\nI am currently working on softening direct commands into more considerate requests. My focus involves exploring various polite phrasing techniques to foster better collaborative interactions and acknowledge recipient perspective.\n\n**Adapting Command Language**\n\nI'm currently working on transforming abrupt commands into more considerate requests. My focus is on incorporating politeness and contextual cues to foster smoother, more collaborative interactions.\n\n**Crafting Collaborative Directives**\n\nI am now considering how to pivot from straightforward directives to more nuanced requests. My current exploration focuses on integrating subtle phrasing that encourages cooperation and acknowledges the recipient's perspective without being demanding.\n\n",
+                  "format": "google-gemini-v1",
+                  "index": 0
+                }
+              ]
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 7,
+          "completion_tokens": 1681,
+          "total_tokens": 1688,
+          "cost": 0.01681875,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.01681875,
+            "upstream_inference_prompt_cost": 8.75e-06,
+            "upstream_inference_completions_cost": 0.01681
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 1360,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "tern": {
+          "routing": {
+            "model": "strong",
+            "tier": "strong",
+            "reason": "shadow_proposal",
+            "source": "laya",
+            "workload": "chat",
+            "proposed_tier": "strong",
+            "probability_economy": 0.7599,
+            "service_mode": "shadow",
+            "policy_version": "binary-shadow-v1",
+            "experimental_threshold": null,
+            "router_ms": 24463.154667000024
+          },
+          "attempted_models": [
+            "strong"
+          ]
+        }
+      },
+      "elapsed_ms": 40949.30710000335
+    },
+    {
+      "case": "streamed_tool_call_not_executed",
+      "request": {
+        "model": "tern/auto",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Look up the weather in Denver."
+          }
+        ],
+        "max_tokens": 2048,
+        "routing": {
+          "input_tokens": 512,
+          "language": "en"
+        },
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        },
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "function",
+          "function": {
+            "name": "get_weather"
+          }
+        }
+      },
+      "routing_headers": {
+        "x-tern-tier": "strong",
+        "x-tern-model": "strong",
+        "x-tern-reason": "capability_or_risk_constraint"
+      },
+      "chunks": [
+        {
+          "id": "gen-1790242307-YkboVaWacSdJudRoAs0g",
+          "object": "chat.completion.chunk",
+          "created": 1790242307,
+          "model": "google/gemini-2.5-pro",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "",
+                "role": "assistant",
+                "reasoning": "**Fetching Weather Information**\n\nI'm focused on retrieving weather data for Denver. My plan involves using the `get_weather` tool with the city parameter explicitly set to \"Denver\", then printing the result.\n\n",
+                "reasoning_details": [
+                  {
+                    "type": "reasoning.text",
+                    "text": "**Fetching Weather Information**\n\nI'm focused on retrieving weather data for Denver. My plan involves using the `get_weather` tool with the city parameter explicitly set to \"Denver\", then printing the result.\n\n",
+                    "format": "google-gemini-v1",
+                    "index": 0
+                  }
+                ]
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790242307-YkboVaWacSdJudRoAs0g",
+          "object": "chat.completion.chunk",
+          "created": 1790242307,
+          "model": "google/gemini-2.5-pro",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "",
+                "role": "assistant",
+                "reasoning": "**Gathering Denver Weather**\n\nI'm now integrating the `get_weather` tool. My focus is on calling it with \"Denver\" as the city parameter and then displaying the retrieved weather information.\n\n",
+                "reasoning_details": [
+                  {
+                    "type": "reasoning.text",
+                    "text": "**Gathering Denver Weather**\n\nI'm now integrating the `get_weather` tool. My focus is on calling it with \"Denver\" as the city parameter and then displaying the retrieved weather information.\n\n",
+                    "format": "google-gemini-v1",
+                    "index": 0
+                  }
+                ]
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790242307-YkboVaWacSdJudRoAs0g",
+          "object": "chat.completion.chunk",
+          "created": 1790242307,
+          "model": "google/gemini-2.5-pro",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "",
+                "role": "assistant",
+                "reasoning": null,
+                "reasoning_details": [
+                  {
+                    "type": "reasoning.encrypted",
+                    "data": "CjcBjz1rX7KR2HPJYvo17nXwSHEjULC1JNwDLpQmK0yI6zCqWbut+Y7MNQhW2rZW2soZfG5ZoG5LCl8Bjz1rX++JvweAlTd8HReDnssE3j35FLuDrA46196OKd880fm7zmm+rfNQ4TCCasvb+pdvMDBCZdb9mZKoypK1EaqwoOFmZoCzZ2CcZWCR8HOH2cnzZRXXyaGshK8YtgpjAY89a1/H1OouQl6OThqHaY1tFORbTDmAjcQkkoe+PXrKkVMhPV+pHjI9dP/0eZU1Orx+NaTzfvnTmNYz2kf4FgFr3yzPSd3pLgWVlkGgAcf6g8KXq/vnvi3199YZsKaUjyPuCpoBAY89a19XLclOesNb5YnFaGR7hxaM4kKvOHWszQJl2IV2ly8SAfTZuB/cDUX7EkYqvn1o2wvn7JyBIqN7VzC4MutdC4RKaqdddZ9Hd94JV1hql0/qB5LwWKB/nxWXsKFTJ46kIIMeVWpStuMJfJnM/zjNsMLNA48wbvQlQw/1s8FEqQvFk4Dsg6aQBX/q4HUdCG6l+w45OvGAKAo0AY89a19qe6vBt0WGs1KvCu+/wD5kEYrCSiB3ccN8k+KoKZ6YjhuVFG1vI/oO2rSFHtvVKw==",
+                    "format": "google-gemini-v1",
+                    "id": "tool_get_weather_RaE6MGpA0Z69cjCfM82d",
+                    "index": 0
+                  }
+                ]
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790242307-YkboVaWacSdJudRoAs0g",
+          "object": "chat.completion.chunk",
+          "created": 1790242307,
+          "model": "google/gemini-2.5-pro",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": null,
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "id": "tool_get_weather_RaE6MGpA0Z69cjCfM82d",
+                    "type": "function",
+                    "function": {
+                      "name": "get_weather",
+                      "arguments": ""
+                    }
+                  }
+                ]
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790242307-YkboVaWacSdJudRoAs0g",
+          "object": "chat.completion.chunk",
+          "created": 1790242307,
+          "model": "google/gemini-2.5-pro",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": null,
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "{\"city\":\"Denver\"}"
+                    }
+                  }
+                ]
+              },
+              "finish_reason": null,
+              "native_finish_reason": null
+            }
+          ]
+        },
+        {
+          "id": "gen-1790242307-YkboVaWacSdJudRoAs0g",
+          "object": "chat.completion.chunk",
+          "created": 1790242307,
+          "model": "google/gemini-2.5-pro",
+          "provider": "Google",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "",
+                "role": "assistant",
+                "reasoning": null
+              },
+              "finish_reason": "tool_calls",
+              "native_finish_reason": "STOP"
+            }
+          ]
+        },
+        {
+          "id": "gen-1790242307-YkboVaWacSdJudRoAs0g",
+          "object": "chat.completion.chunk",
+          "created": 1790242307,
+          "model": "google/gemini-2.5-pro",
+          "provider": "Google",
+          "service_tier": "default",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "",
+                "role": "assistant"
+              },
+              "finish_reason": "tool_calls",
+              "native_finish_reason": "STOP"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 19,
+            "completion_tokens": 81,
+            "total_tokens": 100,
+            "cost": 0.00083375,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00083375,
+              "upstream_inference_prompt_cost": 2.375e-05,
+              "upstream_inference_completions_cost": 0.00081
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 76,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ],
+      "done_received": true,
+      "elapsed_ms": 2396.1428999973577
+    }
+  ],
+  "health": {
+    "ready": true,
+    "mode": "shadow",
+    "model_revision": "20aed815fc6acde75733882e7ec0e3f28aeb9717"
+  },
+  "unauthenticated_models_status": 401
+}
