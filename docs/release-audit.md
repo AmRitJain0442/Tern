@@ -31,7 +31,7 @@ These are point-in-time results. The **Checks** and **Secret scan** workflows mu
 
 ## Remaining launch actions
 
-1. Rotate the OpenRouter credential previously shared in a conversation. It was not found in Git history, but deleting text is not credential revocation. Keep its replacement in the ignored environment file or a secret manager, not in an issue or chat.
+1. Confirm that any credentials exposed outside Git have been rotated at their issuer. This repository audit does not establish revocation status. Keep credentials in an ignored environment file or secret manager, not in issues or chat.
 2. Review and merge the release-preparation branch after its GitHub checks pass. The audit and package changes are isolated from the main working tree.
 3. Have the owner explicitly approve public visibility. Then enable private vulnerability reporting, secret scanning/push protection where available, and branch protection; verify the external reporting path. These public-release steps are detailed in [the release procedure](releasing.md).
 4. Tag and publish an experimental GitHub prerelease only after those steps. No PyPI or container-registry publication was performed as part of this preparation.
