@@ -1,17 +1,17 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.14' and extra != 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra == 'extra-11-tern-router-mlx-metal'",
-    "python_full_version >= '3.12' and python_full_version < '3.14' and extra != 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra == 'extra-11-tern-router-mlx-metal'",
-    "python_full_version < '3.12' and extra != 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra == 'extra-11-tern-router-mlx-metal'",
     "python_full_version >= '3.14' and extra != 'extra-11-tern-router-mlx-cpu' and extra == 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
-    "python_full_version >= '3.12' and python_full_version < '3.14' and extra != 'extra-11-tern-router-mlx-cpu' and extra == 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
-    "python_full_version < '3.12' and extra != 'extra-11-tern-router-mlx-cpu' and extra == 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
     "python_full_version >= '3.14' and extra == 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
-    "python_full_version >= '3.12' and python_full_version < '3.14' and extra == 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
-    "python_full_version < '3.12' and extra == 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
     "python_full_version >= '3.14' and extra != 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and extra != 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra == 'extra-11-tern-router-mlx-metal'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and extra != 'extra-11-tern-router-mlx-cpu' and extra == 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and extra == 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
+    "python_full_version < '3.12' and extra != 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra == 'extra-11-tern-router-mlx-metal'",
+    "python_full_version < '3.12' and extra != 'extra-11-tern-router-mlx-cpu' and extra == 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
+    "python_full_version < '3.12' and extra == 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
     "python_full_version < '3.14' and extra != 'extra-11-tern-router-mlx-cpu' and extra != 'extra-11-tern-router-mlx-cuda' and extra != 'extra-11-tern-router-mlx-metal'",
 ]
 conflicts = [[
@@ -44,7 +44,7 @@ version = "4.15.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "idna" },
-    { name = "typing-extensions", marker = "python_full_version < '3.15'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.15' or (extra == 'extra-11-tern-router-mlx-cpu' and extra == 'extra-11-tern-router-mlx-cuda') or (extra == 'extra-11-tern-router-mlx-cpu' and extra == 'extra-11-tern-router-mlx-metal') or (extra == 'extra-11-tern-router-mlx-cuda' and extra == 'extra-11-tern-router-mlx-metal')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a9/d2/f4d173e22df740bc37b1db102b386ba719b66e95b0f0d751f556b387e6d2/anyio-4.15.1.tar.gz", hash = "sha256:9f28306018cbd6d329e64a36d58256edff76dd996fe423bc957326e578b82a94", size = 276966, upload-time = "2026-09-05T10:42:39.44Z" }
 wheels = [
@@ -1347,13 +1347,13 @@ wheels = [
 
 [[package]]
 name = "uvicorn"
-version = "0.53.0"
+version = "0.54.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "h11" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5d/ad/04bbb797c84fc1f26cb171f7394716f4865ffb8d8c5e1eef42565c2dfa6b/uvicorn-0.53.0.tar.gz", hash = "sha256:a9356f0cb89b3b8621529c5d5eebd69bfe154f4c3f68b4cf2de47e45fa855c2e", size = 110881, upload-time = "2026-09-14T07:44:23.815Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/da/34/30e9280707135d2cfc589dfff3cb796bd07a3aeb1a3e415ba09dd89d7bb4/uvicorn-0.54.0.tar.gz", hash = "sha256:a2e33cbfaa0306f8e6b0c13e0cb89d7d7a2da3e62b90c66e18c33d9807b28620", size = 112283, upload-time = "2026-09-25T06:52:37.601Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/76/18/0eea75741ee812e9f598b687619ce2454f6c3a1c5cd21ea990ec6bd26f45/uvicorn-0.53.0-py3-none-any.whl", hash = "sha256:e8dca71ec86dce5f04e333f0d56cdedf942446e6643b9cea1af0d6d3a02cb03e", size = 87081, upload-time = "2026-09-14T07:44:22.179Z" },
+    { url = "https://files.pythonhosted.org/packages/38/0c/b54a4fdd7f90a3af8b02ebc9ce6712c2c208b7926a2f7bad95c33ebbe943/uvicorn-0.54.0-py3-none-any.whl", hash = "sha256:505bdb0f318731d45f1f712071fc781a8981f6847a31c902c9f5e652d4f67faf", size = 87427, upload-time = "2026-09-25T06:52:35.829Z" },
 ]
